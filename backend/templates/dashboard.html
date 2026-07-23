@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — SIGMA IoT</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#f4f6f7;
+    --card:#ffffff;
+    --line:#e4e8ea;
+    --ink-0:#1c2530;
+    --ink-1:#6b7680;
+    --accent:#0e8f7c;
+    --accent-soft:#e4f6f3;
+    --danger:#d64545;
+    --danger-soft:#fbe9e9;
+    --amber:#c9860f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink-0);
+    font-family:'Inter','Segoe UI',sans-serif;
+  }
+  header{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:20px 32px; background:var(--card); border-bottom:1px solid var(--line);
+    position:sticky; top:0; z-index:10;
+  }
+  header h1{ font-size:1.1rem; margin:0; letter-spacing:-0.01em; }
+  header a{ color:var(--ink-1); text-decoration:none; font-size:0.85rem; }
+  main{ max-width:1100px; margin:0 auto; padding:28px 20px 80px; }
+
+  /* --- Alert banner (fitur 6) --- */
+  #alert-banner{
+    display:none; background:var(--danger); color:#fff; font-weight:600;
+    padding:14px 20px; border-radius:12px; margin-bottom:20px;
+    animation:blink 1s infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0.55; } }
+
+  /* --- Cards real-time (fitur 2) --- */
+  .grid-cards{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:14px; margin-bottom:28px;
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:18px; text-align:center;
+  }
+  .card .label{ font-size:0.8rem; color:var(--ink-1); margin-bottom:8px; }
+  .card .value{ font-size:1.8rem; font-weight:700; }
+  .card .value.ok{ color:var(--accent); }
+  .card .value.warn{ color:var(--danger); }
+
+  section{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:22px; margin-bottom:20px;
+  }
+  section h2{ font-size:1rem; margin:0 0 16px; }
+  .muted{ color:var(--ink-1); font-size:0.85rem; margin-top:-8px; margin-bottom:16px;}
+
+  /* --- Form settings (fitur 4 & 5) --- */
+  .form-row{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:14px; margin-bottom:16px;
+  }
+  .field label{ display:block; font-size:0.8rem; color:var(--ink-1); margin-bottom:6px; }
+  .field input{
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px;
+    font-size:0.95rem;
+  }
+  .mode-toggle{ display:flex; gap:8px; margin-bottom:16px; }
+  .mode-toggle button{
+    flex:1; padding:10px; border-radius:8px; border:1px solid var(--line);
+    background:#fff; cursor:pointer; font-weight:600; color:var(--ink-1);
+  }
+  .mode-toggle button.active{ background:var(--accent); color:#fff; border-color:var(--accent); }
+  .manual-controls{
+    display:none; gap:12px; margin-bottom:16px; align-items:center; flex-wrap:wrap;
+  }
+  .manual-controls.show{ display:flex; }
+  .btn{
+    padding:11px 20px; border-radius:8px; border:none; cursor:pointer;
+    font-weight:600; font-size:0.9rem;
+  }
+  .btn-primary{ background:var(--accent); color:#fff; }
+  .btn-outline{ background:#fff; border:1px solid var(--line); color:var(--ink-0); }
+  .btn-danger{ background:var(--danger-soft); color:var(--danger); border:1px solid #f2c9c9; }
+  .btn-toggle{ background:var(--accent-soft); color:var(--accent); border:1px solid #bfe6de; }
+
+  canvas{ max-height:320px; }
+
+  /* --- Export & delete (fitur 7 & 8) --- */
+  .row-inline{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+  #status-msg{ font-size:0.85rem; margin-top:12px; color:var(--ink-1); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🖥️ Dashboard Monitoring SIGMA</h1>
+  <a href="/">← Kembali ke beranda</a>
+</header>
+
+<main>
+
+  <div id="alert-banner">⚠️ Kondisi kritis terdeteksi — cek suhu / kadar gas!</div>
+
+  <!-- FITUR 2: Dashboard real-time -->
+  <div class="grid-cards">
+    <div class="card"><div class="label">Suhu</div><div class="value ok" id="v-suhu">-- °C</div></div>
+    <div class="card"><div class="label">Kelembapan</div><div class="value ok" id="v-hum">-- %</div></div>
+    <div class="card"><div class="label">Gas (MQ-135)</div><div class="value ok" id="v-gas">--</div></div>
+    <div class="card"><div class="label">Jarak</div><div class="value ok" id="v-jarak">-- cm</div></div>
+    <div class="card"><div class="label">Kipas</div><div class="value ok" id="v-kipas">--</div></div>
+    <div class="card"><div class="label">Servo</div><div class="value ok" id="v-servo">-- °</div></div>
+  </div>
+
+  <!-- FITUR 3: Grafik fluktuasi -->
+  <section>
+    <h2>📈 Grafik Fluktuasi Suhu & Gas</h2>
+    <p class="muted">50 data terakhir, diperbarui otomatis tiap 10 detik.</p>
+    <canvas id="chart-sensor"></canvas>
+  </section>
+
+  <!-- FITUR 4 & 5: Threshold + mode -->
+  <section>
+    <h2>⚙️ Pengaturan Batas Pemicu & Mode Kendali</h2>
+    <p class="muted">Ubah batas suhu/jarak/gas, atau alihkan ke mode manual untuk kendali langsung.</p>
+
+    <div class="mode-toggle">
+      <button id="btn-mode-auto" class="active" onclick="setMode('auto')">🔁 Mode Auto</button>
+      <button id="btn-mode-manual" onclick="setMode('manual')">🕹️ Mode Manual</button>
+    </div>
+
+    <div class="form-row">
+      <div class="field"><label>Batas Suhu (°C)</label><input type="number" id="in-batas-suhu" step="0.1"></div>
+      <div class="field"><label>Batas Jarak (cm)</label><input type="number" id="in-batas-jarak"></div>
+      <div class="field"><label>Batas Gas (ppm)</label><input type="number" id="in-batas-gas"></div>
+    </div>
+    <button class="btn btn-primary" onclick="saveSettings()">Simpan Pengaturan</button>
+
+    <div class="manual-controls" id="manual-controls">
+      <span style="font-size:0.85rem;color:var(--ink-1);">Kendali manual:</span>
+      <button class="btn btn-toggle" onclick="toggleKipasManual()" id="btn-kipas-manual">Kipas: OFF</button>
+      <div class="field" style="max-width:160px;">
+        <label>Sudut Servo (0–90°)</label>
+        <input type="number" id="in-servo-manual" min="0" max="90" value="0" onchange="updateServoManual()">
+      </div>
+    </div>
+
+    <div id="status-msg"></div>
+  </section>
+
+  <!-- FITUR 7 & 8: Export & delete -->
+  <section>
+    <h2>📑 Riwayat Data</h2>
+    <p class="muted">Unduh seluruh log sensor, atau bersihkan data lama agar database tidak penuh.</p>
+    <div class="row-inline">
+      <a class="btn btn-outline" href="/api/export">⬇️ Export ke CSV</a>
+      <input type="date" id="in-delete-before" class="field" style="padding:10px;border:1px solid var(--line);border-radius:8px;">
+      <button class="btn btn-danger" onclick="deleteOldData()">🗑️ Hapus Data Sebelum Tanggal Ini</button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+let currentMode = 'auto';
+let currentThresholds = { batas_suhu: 30, batas_jarak: 20, batas_gas: 500 };
+let kipasManualState = 'OFF';
+
+const ctx = document.getElementById('chart-sensor');
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [
+      { label: 'Suhu (°C)', data: [], borderColor: '#0e8f7c', tension: 0.3, pointRadius: 0 },
+      { label: 'Gas (ppm)', data: [], borderColor: '#c9860f', tension: 0.3, pointRadius: 0, yAxisID: 'y1' }
+    ]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: { title: { display: true, text: 'Suhu (°C)' } },
+      y1: { position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Gas (ppm)' } }
+    }
+  }
+});
+
+async function refreshLatest() {
+  try {
+    const res = await fetch('/api/latest');
+    if (!res.ok) return;
+    const d = await res.json();
+
+    document.getElementById('v-suhu').innerText = d.suhu + ' °C';
+    document.getElementById('v-hum').innerText = d.kelembapan + ' %';
+    document.getElementById('v-gas').innerText = d.gas;
+    document.getElementById('v-jarak').innerText = d.jarak + ' cm';
+    document.getElementById('v-kipas').innerText = d.status_kipas;
+    document.getElementById('v-servo').innerText = d.status_servo + ' °';
+
+    // FITUR 6: alert kondisi kritis
+    const kritis = d.suhu > currentThresholds.batas_suhu + 5 || d.gas > currentThresholds.batas_gas;
+    document.getElementById('alert-banner').style.display = kritis ? 'block' : 'none';
+
+    document.getElementById('v-suhu').className = 'value ' + (d.suhu > currentThresholds.batas_suhu ? 'warn' : 'ok');
+    document.getElementById('v-gas').className = 'value ' + (d.gas > currentThresholds.batas_gas ? 'warn' : 'ok');
+  } catch (e) { console.error('Gagal ambil data terbaru:', e); }
+}
+
+async function refreshHistory() {
+  try {
+    const res = await fetch('/api/history?limit=50');
+    if (!res.ok) return;
+    const rows = await res.json();
+    chart.data.labels = rows.map(r => r.waktu.split(' ')[1]);
+    chart.data.datasets[0].data = rows.map(r => r.suhu);
+    chart.data.datasets[1].data = rows.map(r => r.gas);
+    chart.update();
+  } catch (e) { console.error('Gagal ambil history:', e); }
+}
+
+async function loadSettings() {
+  try {
+    const res = await fetch('/api/settings');
+    const d = await res.json();
+    currentThresholds = { batas_suhu: d.batas_suhu, batas_jarak: d.batas_jarak, batas_gas: d.batas_gas };
+    document.getElementById('in-batas-suhu').value = d.batas_suhu;
+    document.getElementById('in-batas-jarak').value = d.batas_jarak;
+    document.getElementById('in-batas-gas').value = d.batas_gas;
+    kipasManualState = d.kipas_manual;
+    document.getElementById('in-servo-manual').value = d.servo_manual;
+    document.getElementById('btn-kipas-manual').innerText = 'Kipas: ' + kipasManualState;
+    setModeUI(d.mode);
+  } catch (e) { console.error('Gagal ambil settings:', e); }
+}
+
+function setModeUI(mode) {
+  currentMode = mode;
+  document.getElementById('btn-mode-auto').classList.toggle('active', mode === 'auto');
+  document.getElementById('btn-mode-manual').classList.toggle('active', mode === 'manual');
+  document.getElementById('manual-controls').classList.toggle('show', mode === 'manual');
+}
+
+async function setMode(mode) {
+  setModeUI(mode);
+  await postSettings({ mode });
+}
+
+async function saveSettings() {
+  const payload = {
+    batas_suhu: parseFloat(document.getElementById('in-batas-suhu').value),
+    batas_jarak: parseInt(document.getElementById('in-batas-jarak').value),
+    batas_gas: parseInt(document.getElementById('in-batas-gas').value)
+  };
+  currentThresholds = payload;
+  await postSettings(payload);
+}
+
+async function toggleKipasManual() {
+  kipasManualState = kipasManualState === 'ON' ? 'OFF' : 'ON';
+  document.getElementById('btn-kipas-manual').innerText = 'Kipas: ' + kipasManualState;
+  await postSettings({ kipas_manual: kipasManualState });
+}
+
+async function updateServoManual() {
+  const val = parseInt(document.getElementById('in-servo-manual').value);
+  await postSettings({ servo_manual: val });
+}
+
+async function postSettings(payload) {
+  const msg = document.getElementById('status-msg');
+  try {
+    const res = await fetch('/api/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      msg.innerText = '✅ Pengaturan tersimpan (' + new Date().toLocaleTimeString() + ')';
+    } else {
+      msg.innerText = '❌ Gagal menyimpan pengaturan.';
+    }
+  } catch (e) {
+    msg.innerText = '❌ Tidak bisa terhubung ke server.';
+  }
+}
+
+async function deleteOldData() {
+  const before = document.getElementById('in-delete-before').value;
+  if (!before) { alert('Pilih tanggal batas dulu.'); return; }
+  if (!confirm('Hapus semua data sebelum ' + before + '? Aksi ini tidak bisa dibatalkan.')) return;
+
+  try {
+    const res = await fetch('/api/logs?before=' + before, { method: 'DELETE' });
+    const d = await res.json();
+    alert('Berhasil menghapus ' + d.deleted_rows + ' baris data.');
+    refreshHistory();
+  } catch (e) {
+    alert('Gagal menghapus data.');
+  }
+}
+
+// Inisialisasi
+loadSettings();
+refreshLatest();
+refreshHistory();
+setInterval(refreshLatest, 3000);
+setInterval(refreshHistory, 10000);
+</script>
+
+</body>
+</html>
