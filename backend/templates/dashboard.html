@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard — SIGMA IoT</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<!-- Tambah FontAwesome buat ikon di Sidebar -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
   :root{
     --bg:#f4f6f7;
@@ -23,14 +25,116 @@
     margin:0; background:var(--bg); color:var(--ink-0);
     font-family:'Inter','Segoe UI',sans-serif;
   }
-  header{
+
+  /* --- LAYOUT SIDEBAR & MAIN CONTENT --- */
+  .app-container {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 250px;
+    background: var(--card);
+    border-right: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease;
+    overflow: hidden; /* Biar tulisan gak keluar saat menciut */
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    z-index: 100;
+  }
+  .sidebar.collapsed { width: 72px; }
+
+  /* Bagian Atas Sidebar (Logo + Tombol Toggle) */
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    height: 72px;
+    border-bottom: 1px solid var(--line);
+  }
+  
+  /* Logo cuma kelihatan penuh kalau sidebar kebuka */
+  .brand-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 1;
+    transition: opacity 0.2s ease, width 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .sidebar.collapsed .brand-area {
+    opacity: 0;
+    width: 0;
+    pointer-events: none;
+  }
+  .brand-area img { width: 32px; height: 32px; border-radius: 6px; }
+  .brand-area span { font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; }
+
+  /* Tombol Hamburger */
+  .btn-toggle {
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    color: var(--ink-0);
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Kalau collapsed, posisi tombol ke tengah */
+  .sidebar.collapsed .btn-toggle { margin: 0 auto; } 
+
+  /* Navigasi Sidebar Sesuai Sketsa */
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    gap: 5px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 24px;
+    color: var(--ink-1);
+    text-decoration: none;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav-item:hover, .nav-item.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-right: 3px solid var(--accent);
+  }
+  .nav-item i { font-size: 1.1rem; width: 24px; text-align: center; }
+  .nav-item span { transition: opacity 0.2s ease; }
+  .sidebar.collapsed .nav-item span { opacity: 0; pointer-events: none; }
+
+  /* Main Content Area */
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 72px);
+  }
+
+  /* --- HEADER DASHBOARD (Sekarang ga pakai logo lagi) --- */
+  header {
     display:flex; justify-content:space-between; align-items:center;
-    padding:20px 32px; background:var(--card); border-bottom:1px solid var(--line);
+    padding:20px 32px; background:var(--bg); 
     position:sticky; top:0; z-index:10;
   }
-  header h1{ font-size:1.1rem; margin:0; letter-spacing:-0.01em; }
-  header a{ color:var(--ink-1); text-decoration:none; font-size:0.85rem; }
-  main{ max-width:1100px; margin:0 auto; padding:28px 20px 80px; }
+  header h1 { font-size:1.3rem; margin:0; letter-spacing:-0.01em; }
+  
+  main.dashboard-body { max-width:1100px; margin:0 auto; padding:10px 32px 80px; width: 100%; }
 
   /* --- Alert banner (fitur 6) --- */
   #alert-banner{
@@ -77,10 +181,9 @@
     background:#fff; cursor:pointer; font-weight:600; color:var(--ink-1);
   }
   .mode-toggle button.active{ background:var(--accent); color:#fff; border-color:var(--accent); }
-  .manual-controls{
-    display:none; gap:12px; margin-bottom:16px; align-items:center; flex-wrap:wrap;
-  }
+  .manual-controls{ display:none; gap:12px; margin-bottom:16px; align-items:center; flex-wrap:wrap; }
   .manual-controls.show{ display:flex; }
+  
   .btn{
     padding:11px 20px; border-radius:8px; border:none; cursor:pointer;
     font-weight:600; font-size:0.9rem;
@@ -88,89 +191,129 @@
   .btn-primary{ background:var(--accent); color:#fff; }
   .btn-outline{ background:#fff; border:1px solid var(--line); color:var(--ink-0); }
   .btn-danger{ background:var(--danger-soft); color:var(--danger); border:1px solid #f2c9c9; }
-  .btn-toggle{ background:var(--accent-soft); color:var(--accent); border:1px solid #bfe6de; }
+  .btn-toggle-manual{ background:var(--accent-soft); color:var(--accent); border:1px solid #bfe6de; }
 
   canvas{ max-height:320px; }
-
-  /* --- Export & delete (fitur 7 & 8) --- */
   .row-inline{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
   #status-msg{ font-size:0.85rem; margin-top:12px; color:var(--ink-1); }
 </style>
 </head>
 <body>
 
-<header>
-  <div style="display:flex; align-items: center; gap:12px;">
-    <img src="https://via.placeholder.com/32/0e8f7c/ffffff?text=S" alt="Logo SIGMA" style="width:32px; height:32px; border-radius:6px; object-fit: container;">
-    <h1>Dashboard Monitoring SIGMA</h1>
-  </div>
-  <a href="/">← Kembali ke beranda</a>
-</header>
-
-<main>
-
-  <div id="alert-banner">⚠️ Kondisi kritis terdeteksi — cek suhu / kadar gas!</div>
-
-  <!-- FITUR 2: Dashboard real-time -->
-  <div class="grid-cards">
-    <div class="card"><div class="label">Suhu</div><div class="value ok" id="v-suhu">-- °C</div></div>
-    <div class="card"><div class="label">Kelembapan</div><div class="value ok" id="v-hum">-- %</div></div>
-    <div class="card"><div class="label">Gas (MQ-135)</div><div class="value ok" id="v-gas">--</div></div>
-    <div class="card"><div class="label">Jarak</div><div class="value ok" id="v-jarak">-- cm</div></div>
-    <div class="card"><div class="label">Kipas</div><div class="value ok" id="v-kipas">--</div></div>
-    <div class="card"><div class="label">Servo</div><div class="value ok" id="v-servo">-- °</div></div>
-  </div>
-
-  <!-- FITUR 3: Grafik fluktuasi -->
-  <section>
-    <h2>📈 Grafik Fluktuasi Suhu & Gas</h2>
-    <p class="muted">50 data terakhir, diperbarui otomatis tiap 10 detik.</p>
-    <canvas id="chart-sensor"></canvas>
-  </section>
-
-  <!-- FITUR 4 & 5: Threshold + mode -->
-  <section>
-    <h2>⚙️ Pengaturan Batas Pemicu & Mode Kendali</h2>
-    <p class="muted">Ubah batas suhu/jarak/gas, atau alihkan ke mode manual untuk kendali langsung.</p>
-
-    <div class="mode-toggle">
-      <button id="btn-mode-auto" class="active" onclick="setMode('auto')">🔁 Mode Auto</button>
-      <button id="btn-mode-manual" onclick="setMode('manual')">🕹️ Mode Manual</button>
-    </div>
-
-    <div class="form-row">
-      <div class="field"><label>Batas Suhu (°C)</label><input type="number" id="in-batas-suhu" step="0.1"></div>
-      <div class="field"><label>Batas Jarak (cm)</label><input type="number" id="in-batas-jarak"></div>
-      <div class="field"><label>Batas Gas (ppm)</label><input type="number" id="in-batas-gas"></div>
-    </div>
-    <button class="btn btn-primary" onclick="saveSettings()">Simpan Pengaturan</button>
-
-    <div class="manual-controls" id="manual-controls">
-      <span style="font-size:0.85rem;color:var(--ink-1);">Kendali manual:</span>
-      <button class="btn btn-toggle" onclick="toggleKipasManual()" id="btn-kipas-manual">Kipas: OFF</button>
-      <div class="field" style="max-width:160px;">
-        <label>Sudut Servo (0–90°)</label>
-        <input type="number" id="in-servo-manual" min="0" max="90" value="0" onchange="updateServoManual()">
+<div class="app-container">
+  
+  <!-- SIDEBAR BARU -->
+  <aside class="sidebar collapsed" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-area">
+        <img src="https://via.placeholder.com/32/0e8f7c/ffffff?text=S" alt="Logo SIGMA">
+        <span>SIGMA.IOT</span>
       </div>
+      <button class="btn-toggle" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+      </button>
     </div>
 
-    <div id="status-msg"></div>
-  </section>
+    <!-- Menu Sesuai Sketsa Teman Lu -->
+    <nav class="sidebar-nav">
+      <a href="/" class="nav-item">
+        <i class="fa-solid fa-house"></i> <span>Beranda</span>
+      </a>
+      <a href="/layanan" class="nav-item">
+        <i class="fa-solid fa-cogs"></i> <span>Layanan Sistem</span>
+      </a>
+      <a href="/tentang" class="nav-item">
+        <i class="fa-solid fa-users"></i> <span>Tentang Kami</span>
+      </a>
+      
+      <div style="margin: 20px 24px; border-top: 1px solid var(--line);"></div>
+      
+      <a href="/dashboard" class="nav-item active">
+        <i class="fa-solid fa-chart-line"></i> <span>Dashboard</span>
+      </a>
+    </nav>
+  </aside>
 
-  <!-- FITUR 7 & 8: Export & delete -->
-  <section>
-    <h2>📑 Riwayat Data</h2>
-    <p class="muted">Unduh seluruh log sensor, atau bersihkan data lama agar database tidak penuh.</p>
-    <div class="row-inline">
-      <a class="btn btn-outline" href="/api/export">⬇️ Export ke CSV</a>
-      <input type="date" id="in-delete-before" class="field" style="padding:10px;border:1px solid var(--line);border-radius:8px;">
-      <button class="btn btn-danger" onclick="deleteOldData()">🗑️ Hapus Data Sebelum Tanggal Ini</button>
-    </div>
-  </section>
+  <!-- KONTEN UTAMA DASHBOARD -->
+  <div class="main-content">
+    <header>
+      <h1>Monitoring Status</h1>
+      <span class="muted" style="margin:0;">Diperbarui secara real-time</span>
+    </header>
 
-</main>
+    <main class="dashboard-body">
+
+      <div id="alert-banner">⚠️ Kondisi kritis terdeteksi — cek suhu / kadar gas!</div>
+
+      <!-- FITUR 2: Dashboard real-time -->
+      <div class="grid-cards">
+        <div class="card"><div class="label">Suhu</div><div class="value ok" id="v-suhu">-- °C</div></div>
+        <div class="card"><div class="label">Kelembapan</div><div class="value ok" id="v-hum">-- %</div></div>
+        <div class="card"><div class="label">Gas (MQ-135)</div><div class="value ok" id="v-gas">--</div></div>
+        <div class="card"><div class="label">Jarak</div><div class="value ok" id="v-jarak">-- cm</div></div>
+        <div class="card"><div class="label">Kipas</div><div class="value ok" id="v-kipas">--</div></div>
+        <div class="card"><div class="label">Servo</div><div class="value ok" id="v-servo">-- °</div></div>
+      </div>
+
+      <!-- FITUR 3: Grafik fluktuasi -->
+      <section>
+        <h2>📈 Grafik Fluktuasi Suhu & Gas</h2>
+        <p class="muted">50 data terakhir, diperbarui otomatis tiap 10 detik.</p>
+        <canvas id="chart-sensor"></canvas>
+      </section>
+
+      <!-- FITUR 4 & 5: Threshold + mode -->
+      <section>
+        <h2>⚙️ Pengaturan Batas Pemicu & Mode Kendali</h2>
+        <p class="muted">Ubah batas suhu/jarak/gas, atau alihkan ke mode manual untuk kendali langsung.</p>
+
+        <div class="mode-toggle">
+          <button id="btn-mode-auto" class="active" onclick="setMode('auto')">🔁 Mode Auto</button>
+          <button id="btn-mode-manual" onclick="setMode('manual')">🕹️ Mode Manual</button>
+        </div>
+
+        <div class="form-row">
+          <div class="field"><label>Batas Suhu (°C)</label><input type="number" id="in-batas-suhu" step="0.1"></div>
+          <div class="field"><label>Batas Jarak (cm)</label><input type="number" id="in-batas-jarak"></div>
+          <div class="field"><label>Batas Gas (ppm)</label><input type="number" id="in-batas-gas"></div>
+        </div>
+        <button class="btn btn-primary" onclick="saveSettings()">Simpan Pengaturan</button>
+
+        <div class="manual-controls" id="manual-controls">
+          <span style="font-size:0.85rem;color:var(--ink-1);">Kendali manual:</span>
+          <button class="btn btn-toggle-manual" onclick="toggleKipasManual()" id="btn-kipas-manual">Kipas: OFF</button>
+          <div class="field" style="max-width:160px;">
+            <label>Sudut Servo (0–90°)</label>
+            <input type="number" id="in-servo-manual" min="0" max="90" value="0" onchange="updateServoManual()">
+          </div>
+        </div>
+
+        <div id="status-msg"></div>
+      </section>
+
+      <!-- FITUR 7 & 8: Export & delete -->
+      <section>
+        <h2>📑 Riwayat Data</h2>
+        <p class="muted">Unduh seluruh log sensor, atau bersihkan data lama agar database tidak penuh.</p>
+        <div class="row-inline">
+          <a class="btn btn-outline" href="/api/export">⬇️ Export ke CSV</a>
+          <input type="date" id="in-delete-before" class="field" style="padding:10px;border:1px solid var(--line);border-radius:8px;">
+          <button class="btn btn-danger" onclick="deleteOldData()">🗑️ Hapus Data Sebelum Tanggal Ini</button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
 
 <script>
+// Logic Buka-Tutup Sidebar
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.toggle('collapsed');
+}
+
+// Logic Dashboard IoT Bawaan (Tetap Dipertahankan)
 let currentMode = 'auto';
 let currentThresholds = { batas_suhu: 30, batas_jarak: 20, batas_gas: 500 };
 let kipasManualState = 'OFF';
@@ -207,7 +350,6 @@ async function refreshLatest() {
     document.getElementById('v-kipas').innerText = d.status_kipas;
     document.getElementById('v-servo').innerText = d.status_servo + ' °';
 
-    // FITUR 6: alert kondisi kritis
     const kritis = d.suhu > currentThresholds.batas_suhu + 5 || d.gas > currentThresholds.batas_gas;
     document.getElementById('alert-banner').style.display = kritis ? 'block' : 'none';
 
