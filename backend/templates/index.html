@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SIGMA — Sistem Monitoring Kandang Otomatis</title>
-<!-- CDN FontAwesome Diupdate ke versi 6.5.1 biar logo X Twitter muncul -->
+<!-- CDN FontAwesome untuk Icon Sosmed -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
   :root{
@@ -71,16 +71,9 @@
 
   /* --- LAYOUT ZIG-ZAG FULL WIDTH --- */
   .content-section {
-    width: 100%;
-    max-width: 100%; 
-    margin: 0; 
-    padding: 100px 64px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
-    gap: 40px;
+    width: 100%; max-width: 100%; margin: 0; padding: 100px 64px; 
+    display: flex; align-items: center; justify-content: space-between; gap: 40px;
   }
-  
   .content-section.reverse { flex-direction: row-reverse; } 
   .text-block { flex: 0 1 50%; text-align: left; } 
   .content-section.reverse .text-block { text-align: right; } 
@@ -96,9 +89,7 @@
   .text-block h2 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; margin: 0 0 20px; font-weight: 700; }
   
   .text-block .sub {
-    color: var(--ink-1); font-size: 1.15rem; 
-    max-width: 600px; 
-    line-height: 1.6; margin: 0 0 44px 0;
+    color: var(--ink-1); font-size: 1.15rem; max-width: 600px; line-height: 1.6; margin: 0 0 44px 0;
   }
   .content-section.reverse .sub { margin-left: auto; margin-right: 0; }
 
@@ -113,23 +104,18 @@
   .content-section.reverse .image-block { justify-content: flex-start; }
   
   .tilt-img {
-    width: 100%; max-width: 650px; 
-    height: auto; border-radius: 20px;
+    width: 100%; max-width: 650px; height: auto; border-radius: 20px;
     box-shadow: 0 15px 35px rgba(0,0,0,0.3);
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
     border: 1px solid var(--line);
   }
-  
   .tilt-img:hover {
-    transform: rotate(3deg) scale(1.04);
-    box-shadow: 0 25px 45px rgba(55, 224, 196, 0.2); 
+    transform: rotate(3deg) scale(1.04); box-shadow: 0 25px 45px rgba(55, 224, 196, 0.2); 
   }
   .reverse .tilt-img:hover { transform: rotate(-3deg) scale(1.04); }
 
   /* --- TABEL SENSOR --- */
-  .readout-wrapper { 
-    width: 100%; max-width: 100%; margin: 0 auto 80px auto; padding: 0 64px; 
-  }
+  .readout-wrapper { width: 100%; max-width: 100%; margin: 0 auto 80px auto; padding: 0 64px; }
   .readout {
     display: grid; grid-template-columns: repeat(5,1fr); gap: 1px;
     background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
@@ -138,127 +124,93 @@
   .readout .label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--ink-1); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
   .readout .value { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
 
+
+  /* --- TIM PENGEMBANG (BARU) --- */
+  .team-section {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px 64px 100px;
+    text-align: center;
+  }
+  .team-section h2 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; margin: 0 0 15px; font-weight: 700; }
+  .team-section .sub {
+    color: var(--ink-1); font-size: 1.1rem; max-width: 600px; line-height: 1.6; margin: 0 auto 50px auto;
+  }
+  .team-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+  .team-card {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 40px 25px;
+    width: 320px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .team-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(55, 224, 196, 0.15);
+    border-color: rgba(55, 224, 196, 0.5);
+  }
+  .team-img {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+    border: 3px solid var(--accent);
+    padding: 3px;
+  }
+  .team-name { font-size: 1.3rem; font-weight: 700; color: var(--ink-0); margin: 0 0 8px 0; }
+  .team-role {
+    font-size: 0.85rem; color: var(--accent); font-family: 'JetBrains Mono', monospace;
+    margin: 0 0 20px 0; letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .team-desc { font-size: 0.95rem; color: var(--ink-1); line-height: 1.6; margin: 0; }
+
+
   /* --- FOOTER LENGKAP & MODERN --- */
   .site-footer {
-    background: var(--bg-1);
-    border-top: 1px solid var(--line);
-    padding: 80px 64px 30px; 
-    margin-top: 80px;
+    background: var(--bg-1); border-top: 1px solid var(--line);
+    padding: 80px 64px 30px; margin-top: 40px;
   }
-
   .footer-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 40px;
-    max-width: 1440px;
-    margin: 0 auto;
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 40px;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px;
+    max-width: 1440px; margin: 0 auto; border-bottom: 1px solid var(--line); padding-bottom: 40px;
   }
-
-  .footer-col {
-    flex: 1;
-    min-width: 250px;
-  }
-
-  /* Brand Column */
+  .footer-col { flex: 1; min-width: 250px; }
   .brand-col h3 {
-    font-family: 'JetBrains Mono', 'Courier New', monospace;
-    font-size: 1.5rem;
-    color: var(--ink-0);
-    margin: 0 0 15px 0;
-    letter-spacing: 0.1em;
+    font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 1.5rem;
+    color: var(--ink-0); margin: 0 0 15px 0; letter-spacing: 0.1em;
   }
   .brand-col h3 span { color: var(--accent); }
+  .brand-col p { color: var(--ink-1); line-height: 1.6; margin-bottom: 25px; font-size: 0.95rem; max-width: 350px; }
   
-  .brand-col p {
-    color: var(--ink-1);
-    line-height: 1.6;
-    margin-bottom: 25px;
-    font-size: 0.95rem;
-    max-width: 350px;
-  }
-
-  .social-icons {
-    display: flex;
-    gap: 15px;
-  }
-
+  .social-icons { display: flex; gap: 15px; }
   .social-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 42px;
-    height: 42px;
-    background: rgba(255,255,255,0.03);
-    border-radius: 50%;
-    color: var(--ink-0); 
-    font-size: 1.1rem;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center; width: 42px; height: 42px;
+    background: rgba(255,255,255,0.03); border-radius: 50%; color: var(--ink-0); font-size: 1.1rem;
+    text-decoration: none; transition: all 0.3s ease; border: 1px solid var(--line);
   }
-
   .social-link:hover {
-    background: var(--accent);
-    color: var(--bg-0);
-    border-color: var(--accent);
-    transform: translateY(-4px); 
-    box-shadow: 0 5px 15px rgba(55, 224, 196, 0.3);
+    background: var(--accent); color: var(--bg-0); border-color: var(--accent);
+    transform: translateY(-4px); box-shadow: 0 5px 15px rgba(55, 224, 196, 0.3);
   }
 
-  /* Links & Contact Column */
-  .footer-col h4 {
-    color: var(--ink-0);
-    font-size: 1.1rem;
-    margin: 0 0 20px 0;
-    font-weight: 600;
-  }
-
-  .footer-col ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .footer-col ul li {
-    margin-bottom: 12px;
-  }
-
+  .footer-col h4 { color: var(--ink-0); font-size: 1.1rem; margin: 0 0 20px 0; font-weight: 600; }
+  .footer-col ul { list-style: none; padding: 0; margin: 0; }
+  .footer-col ul li { margin-bottom: 12px; }
   .footer-col ul li a, .footer-col ul li {
-    color: var(--ink-1);
-    text-decoration: none;
-    font-size: 0.95rem;
-    transition: color 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    color: var(--ink-1); text-decoration: none; font-size: 0.95rem; transition: color 0.3s ease;
+    display: flex; align-items: center; gap: 12px;
   }
+  .footer-col ul li a:hover { color: var(--accent); }
+  .footer-col ul li i { color: var(--accent); font-size: 1rem; width: 20px; text-align: center; }
 
-  .footer-col ul li a:hover {
-    color: var(--accent);
-  }
-  
-  .footer-col ul li i {
-    color: var(--accent);
-    font-size: 1rem;
-    width: 20px; /* Biar sejajar rata kiri */
-    text-align: center;
-  }
-
-  /* Copyright Bottom */
-  .footer-bottom {
-    text-align: center;
-    padding-top: 30px;
-  }
-  
-  .footer-bottom p {
-    margin: 0;
-    color: var(--ink-1);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.85rem;
-  }
+  .footer-bottom { text-align: center; padding-top: 30px; }
+  .footer-bottom p { margin: 0; color: var(--ink-1); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
 
   /* RESPONSIVE DESIGN */
   @media (max-width: 1024px) {
@@ -273,8 +225,7 @@
     .content-section.reverse .text-block { text-align: left; }
     .content-section.reverse .sub { margin-left: 0; }
     .image-block, .content-section.reverse .image-block { justify-content: center; width: 100%; margin-top: 40px; }
-    .readout-wrapper { padding: 0 30px; }
-    
+    .readout-wrapper, .team-section { padding-left: 30px; padding-right: 30px; }
     .footer-container { flex-direction: column; gap: 30px; }
     .site-footer { padding: 60px 30px 25px; }
   }
@@ -291,17 +242,15 @@
       <img src="https://via.placeholder.com/38/37e0c4/04201b?text=S" alt="Logo SIGMA" class="brand-logo-img">
       <div class="brand">SIGMA<span>.</span>IOT</div>
     </div>
-
     <div class="nav-menu">
       <a href="#beranda" class="active"><span class="icon-box solid"></span> Beranda</a>
       <a href="#tentang"><span class="icon-box"></span> Tentang Kami</a>
-      <a href="#layanan"><span class="icon-box"></span> Layanan </a>
-      <!--<a href="#kontak"><span class="icon-box"></span> Kontak</a> -->
+      <a href="#layanan"><span class="icon-box"></span> Layanan ▾</a>
+      <a href="#kontak"><span class="icon-box"></span> Kontak</a>
     </div>
-
     <div style="display: flex; align-items: center; gap: 16px;">
       <a href="https://wa.me/6281234567890" target="_blank" class="btn-hubungi">Hubungi Kami 💬</a>
-      <a href="/dashboard" style="color: var(--ink-1); text-decoration: none; font-size: 0.85rem;"></a> <!-- Link ke dashboard -->
+      <a href="/dashboard" style="color: var(--ink-1); text-decoration: none; font-size: 0.85rem;">Dashboard</a>
     </div>
   </nav>
 
@@ -333,19 +282,52 @@
     </div>
   </div>
 
-  <!-- BAGIAN 2: TENTANG KAMI -->
+  <!-- BAGIAN 2: TENTANG KAMI (VISI & MISI) -->
   <section class="content-section reverse" id="tentang">
     <div class="text-block">
       <div class="eyebrow">Tentang Kami</div>
-      <h2>Pantau Semuanya<br><span style="color: var(--accent);">Lewat Dashboard.</span></h2>
+      <h2>Mewujudkan Pemantauan<br><span style="color: var(--accent);">Cerdas & Efisien.</span></h2>
       <p class="sub">
-        Tidak perlu lagi datang ke lokasi hanya untuk mengecek suhu atau menyalakan sirkulasi udara. Semua data riwayat harian direkam dan dapat dikontrol langsung dari layar perangkatmu.
+        <strong>Misi kami</strong> adalah menghadirkan teknologi otomatisasi yang praktis dan dapat diandalkan. Dengan memegang teguh <strong>nilai</strong> akurasi data dan kemudahan akses, SIGMA berkomitmen memberikan ketenangan pikiran bagi Anda melalui kontrol <i>real-time</i> yang responsif.
       </p>
     </div>
     <div class="image-block">
       <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80" alt="Dashboard View" class="tilt-img">
     </div>
   </section>
+
+  <!-- BAGIAN 2.5: PROFIL TIM PENGEMBANG -->
+  <div class="team-section">
+    <div class="eyebrow" style="justify-content: center; display: flex;">Tim Pengembang</div>
+    <h2>Orang-Orang Hebat di Balik <span style="color: var(--accent);">SIGMA.</span></h2>
+    <p class="sub">Kami adalah sekumpulan mahasiswa dan engineer yang berdedikasi menciptakan solusi IoT inovatif.</p>
+    
+    <div class="team-grid">
+      <!-- Profil 1 (Bisa diganti foto lu sendiri) -->
+      <div class="team-card">
+        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80" alt="Foto Profil" class="team-img">
+        <h3 class="team-name">Muhammad Adib S.</h3>
+        <p class="team-role">Lead Network & Backend</p>
+        <p class="team-desc">Fokus merancang arsitektur jaringan, mikrotik, dan memastikan sistem backend Flask berjalan lancar.</p>
+      </div>
+      
+      <!-- Profil 2 -->
+      <div class="team-card">
+        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80" alt="Foto Profil" class="team-img">
+        <h3 class="team-name">Nur Intan</h3>
+        <p class="team-role">UI/UX & Frontend</p>
+        <p class="team-desc">Merancang tampilan antarmuka (dashboard) agar mudah digunakan, responsif, dan terlihat modern.</p>
+      </div>
+      
+      <!-- Profil 3 -->
+      <div class="team-card">
+        <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=200&q=80" alt="Foto Profil" class="team-img">
+        <h3 class="team-name">Hanif Developer</h3>
+        <p class="team-role">Hardware Engineer</p>
+        <p class="team-desc">Merakit dan mengkalibrasi sensor suhu, gas, serta mengintegrasikannya dengan mikrokontroler ESP32.</p>
+      </div>
+    </div>
+  </div>
 
   <!-- BAGIAN 3: LAYANAN -->
   <section class="content-section" id="layanan">
@@ -364,8 +346,6 @@
   <!-- FOOTER LENGKAP -->
   <footer class="site-footer" id="kontak">
     <div class="footer-container">
-      
-      <!-- Kolom 1: Brand Info & Social Media -->
       <div class="footer-col brand-col">
         <h3>SIGMA<span>.</span>IOT</h3>
         <p>Sistem cerdas untuk pemantauan dan otomatisasi secara real-time. Membantu mengelola kondisi lingkungan dari jarak jauh dengan mudah.</p>
@@ -378,18 +358,16 @@
         </div>
       </div>
 
-      <!-- Kolom 2: Tautan Cepat -->
       <div class="footer-col links-col">
         <h4>Tautan Cepat</h4>
         <ul>
           <li><a href="#beranda">Beranda</a></li>
           <li><a href="#tentang">Tentang Kami</a></li>
           <li><a href="#layanan">Layanan Sistem</a></li>
-          <li><a href="/dashboard">Dashboard</a></li>
+          <li><a href="/dashboard">Buka Dashboard</a></li>
         </ul>
       </div>
 
-      <!-- Kolom 3: Info Kontak -->
       <div class="footer-col contact-col">
         <h4>Hubungi Kami</h4>
         <ul>
@@ -398,10 +376,7 @@
           <li><i class="fa-solid fa-location-dot"></i> Yogyakarta, Indonesia</li>
         </ul>
       </div>
-
     </div>
-
-    <!-- Copyright Bottom -->
     <div class="footer-bottom">
       <p>&copy; 2026 SIGMA.IOT. All rights reserved.</p>
     </div>
@@ -410,7 +385,7 @@
   <!-- SCRIPT NAVBAR SCROLL -->
   <script>
     const navbar = document.getElementById('main-navbar');
-    const sections = document.querySelectorAll("section, footer");
+    const sections = document.querySelectorAll("section, footer, .team-section");
     const navLinks = document.querySelectorAll(".nav-menu a");
 
     window.addEventListener('scroll', function() {
@@ -424,7 +399,7 @@
       sections.forEach((section) => {
         const sectionTop = section.offsetTop;
         if (pageYOffset >= sectionTop - 250) {
-          current = section.getAttribute("id");
+          current = section.getAttribute("id") || current;
         }
       });
 
