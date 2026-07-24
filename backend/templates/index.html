@@ -18,9 +18,7 @@
   }
   *{box-sizing:border-box;}
   
-  /* Smooth scroll agar perpindahan antar menu navbar mulus */
   html { scroll-behavior: smooth; }
-  
   html,body{margin:0;padding:0; overflow-x: hidden;}
   
   body{
@@ -30,7 +28,7 @@
     color:var(--ink-0);
     font-family:'Inter','Segoe UI',sans-serif;
     min-height:100vh;
-    padding-top: 110px; /* Jarak agar konten tidak tertutup fixed header */
+    padding-top: 110px; 
   }
 
   /* --- HEADER & NAVBAR TRANSPARAN --- */
@@ -69,14 +67,12 @@
   }
   .btn-hubungi:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(55, 224, 196, 0.3); }
 
-  /* --- LAYOUT ZIG-ZAG FULL WIDTH --- */
+  /* --- LAYOUT UTAMA --- */
   .content-section {
     width: 100%; max-width: 100%; margin: 0; padding: 100px 64px; 
     display: flex; align-items: center; justify-content: space-between; gap: 40px;
   }
-  .content-section.reverse { flex-direction: row-reverse; } 
   .text-block { flex: 0 1 50%; text-align: left; } 
-  .content-section.reverse .text-block { text-align: right; } 
 
   .eyebrow {
     font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
@@ -86,12 +82,10 @@
     font-size: clamp(2.4rem, 5vw, 4.2rem); line-height: 1.05; margin: 0 0 24px; font-weight: 800; letter-spacing: -0.02em;
   }
   .text-block h1 .dim { color: var(--ink-1); font-weight: 600; }
-  .text-block h2 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; margin: 0 0 20px; font-weight: 700; }
   
   .text-block .sub {
     color: var(--ink-1); font-size: 1.15rem; max-width: 600px; line-height: 1.6; margin: 0 0 44px 0;
   }
-  .content-section.reverse .sub { margin-left: auto; margin-right: 0; }
 
   .cta {
     display: inline-flex; align-items: center; gap: 10px; background: var(--accent); color: #04201b; font-weight: 700;
@@ -99,9 +93,8 @@
   }
   .cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(55,224,196,0.25); }
 
-  /* --- ANIMASI GAMBAR INTERAKTIF --- */
+  /* --- ANIMASI GAMBAR --- */
   .image-block { flex: 0 1 45%; display: flex; justify-content: flex-end; }
-  .content-section.reverse .image-block { justify-content: flex-start; }
   
   .tilt-img {
     width: 100%; max-width: 650px; height: auto; border-radius: 20px;
@@ -112,10 +105,11 @@
   .tilt-img:hover {
     transform: rotate(3deg) scale(1.04); box-shadow: 0 25px 45px rgba(55, 224, 196, 0.2); 
   }
-  .reverse .tilt-img:hover { transform: rotate(-3deg) scale(1.04); }
 
   /* --- TABEL SENSOR --- */
-  .readout-wrapper { width: 100%; max-width: 100%; margin: 0 auto 80px auto; padding: 0 64px; }
+  .readout-wrapper { 
+    width: 100%; max-width: 100%; margin: 0 auto 80px auto; padding: 0 64px; 
+  }
   .readout {
     display: grid; grid-template-columns: repeat(5,1fr); gap: 1px;
     background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
@@ -124,54 +118,7 @@
   .readout .label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--ink-1); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
   .readout .value { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
 
-
-  /* --- TIM PENGEMBANG (BARU) --- */
-  .team-section {
-    width: 100%;
-    max-width: 100%;
-    padding: 20px 64px 100px;
-    text-align: center;
-  }
-  .team-section h2 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; margin: 0 0 15px; font-weight: 700; }
-  .team-section .sub {
-    color: var(--ink-1); font-size: 1.1rem; max-width: 600px; line-height: 1.6; margin: 0 auto 50px auto;
-  }
-  .team-grid {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    flex-wrap: wrap;
-  }
-  .team-card {
-    background: var(--bg-1);
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    padding: 40px 25px;
-    width: 320px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-  }
-  .team-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 35px rgba(55, 224, 196, 0.15);
-    border-color: rgba(55, 224, 196, 0.5);
-  }
-  .team-img {
-    width: 110px; height: 110px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 20px;
-    border: 3px solid var(--accent);
-    padding: 3px;
-  }
-  .team-name { font-size: 1.3rem; font-weight: 700; color: var(--ink-0); margin: 0 0 8px 0; }
-  .team-role {
-    font-size: 0.85rem; color: var(--accent); font-family: 'JetBrains Mono', monospace;
-    margin: 0 0 20px 0; letter-spacing: 0.05em; text-transform: uppercase;
-  }
-  .team-desc { font-size: 0.95rem; color: var(--ink-1); line-height: 1.6; margin: 0; }
-
-
-  /* --- FOOTER LENGKAP & MODERN --- */
+  /* --- FOOTER --- */
   .site-footer {
     background: var(--bg-1); border-top: 1px solid var(--line);
     padding: 80px 64px 30px; margin-top: 40px;
@@ -221,11 +168,8 @@
     nav.navbar { padding: 20px 30px; }
     .nav-menu { display: none; }
     .content-section { padding: 60px 30px; flex-direction: column; text-align: left; justify-content: center;}
-    .content-section.reverse { flex-direction: column; text-align: left; }
-    .content-section.reverse .text-block { text-align: left; }
-    .content-section.reverse .sub { margin-left: 0; }
-    .image-block, .content-section.reverse .image-block { justify-content: center; width: 100%; margin-top: 40px; }
-    .readout-wrapper, .team-section { padding-left: 30px; padding-right: 30px; }
+    .image-block { justify-content: center; width: 100%; margin-top: 40px; }
+    .readout-wrapper { padding: 0 30px; }
     .footer-container { flex-direction: column; gap: 30px; }
     .site-footer { padding: 60px 30px 25px; }
   }
@@ -242,12 +186,15 @@
       <img src="https://via.placeholder.com/38/37e0c4/04201b?text=S" alt="Logo SIGMA" class="brand-logo-img">
       <div class="brand">SIGMA<span>.</span>IOT</div>
     </div>
+
+    <!-- LINK NAVIGASI DIUPDATE KE ROUTE BERBEDA -->
     <div class="nav-menu">
-      <a href="#beranda" class="active"><span class="icon-box solid"></span> Beranda</a>
-      <a href="#tentang"><span class="icon-box"></span> Tentang Kami</a>
-      <a href="#layanan"><span class="icon-box"></span> Layanan ▾</a>
+      <a href="/" class="active"><span class="icon-box solid"></span> Beranda</a>
+      <a href="/tentang"><span class="icon-box"></span> Tentang Kami</a>
+      <a href="/layanan"><span class="icon-box"></span> Layanan</a>
       <a href="#kontak"><span class="icon-box"></span> Kontak</a>
     </div>
+
     <div style="display: flex; align-items: center; gap: 16px;">
       <a href="https://wa.me/6281234567890" target="_blank" class="btn-hubungi">Hubungi Kami 💬</a>
       <a href="/dashboard" style="color: var(--ink-1); text-decoration: none; font-size: 0.85rem;">Dashboard</a>
@@ -255,7 +202,7 @@
   </nav>
 
   <!-- BAGIAN 1: BERANDA -->
-  <section class="content-section" id="beranda" style="padding-top: 60px;">
+  <section class="content-section" style="padding-top: 60px;">
     <div class="text-block">
       <div class="eyebrow">ESP32 · DHT22 · MQ-135 · Ultrasonic</div>
       <h1>Kandang yang <br><span class="dim">mengawasi dirinya sendiri.</span></h1>
@@ -282,67 +229,6 @@
     </div>
   </div>
 
-  <!-- BAGIAN 2: TENTANG KAMI (VISI & MISI) -->
-  <section class="content-section reverse" id="tentang">
-    <div class="text-block">
-      <div class="eyebrow">Tentang Kami</div>
-      <h2>Mewujudkan Pemantauan<br><span style="color: var(--accent);">Cerdas & Efisien.</span></h2>
-      <p class="sub">
-        <strong>Misi kami</strong> adalah menghadirkan teknologi otomatisasi yang praktis dan dapat diandalkan. Dengan memegang teguh <strong>nilai</strong> akurasi data dan kemudahan akses, SIGMA berkomitmen memberikan ketenangan pikiran bagi Anda melalui kontrol <i>real-time</i> yang responsif.
-      </p>
-    </div>
-    <div class="image-block">
-      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80" alt="Dashboard View" class="tilt-img">
-    </div>
-  </section>
-
-  <!-- BAGIAN 2.5: PROFIL TIM PENGEMBANG -->
-  <div class="team-section">
-    <div class="eyebrow" style="justify-content: center; display: flex;">Tim Pengembang</div>
-    <h2>Orang-Orang Hebat di Balik <span style="color: var(--accent);">SIGMA.</span></h2>
-    <p class="sub">Kami adalah sekumpulan mahasiswa dan engineer yang berdedikasi menciptakan solusi IoT inovatif.</p>
-    
-    <div class="team-grid">
-      <!-- Profil 1 (Bisa diganti foto lu sendiri) -->
-      <div class="team-card">
-        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80" alt="Foto Profil" class="team-img">
-        <h3 class="team-name">Muhammad Adib S.</h3>
-        <p class="team-role">Lead Network & Backend</p>
-        <p class="team-desc">Fokus merancang arsitektur jaringan, mikrotik, dan memastikan sistem backend Flask berjalan lancar.</p>
-      </div>
-      
-      <!-- Profil 2 -->
-      <div class="team-card">
-        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80" alt="Foto Profil" class="team-img">
-        <h3 class="team-name">Nur Intan</h3>
-        <p class="team-role">UI/UX & Frontend</p>
-        <p class="team-desc">Merancang tampilan antarmuka (dashboard) agar mudah digunakan, responsif, dan terlihat modern.</p>
-      </div>
-      
-      <!-- Profil 3 -->
-      <div class="team-card">
-        <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=200&q=80" alt="Foto Profil" class="team-img">
-        <h3 class="team-name">Hanif Developer</h3>
-        <p class="team-role">Hardware Engineer</p>
-        <p class="team-desc">Merakit dan mengkalibrasi sensor suhu, gas, serta mengintegrasikannya dengan mikrokontroler ESP32.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- BAGIAN 3: LAYANAN -->
-  <section class="content-section" id="layanan">
-    <div class="text-block">
-      <div class="eyebrow">Sistem Otomatisasi</div>
-      <h2>Notifikasi Cerdas &<br>Tindakan Instan.</h2>
-      <p class="sub">
-        Saat suhu melampaui batas wajar atau terdeteksi gas berbahaya, sistem secara otomatis akan mengambil tindakan pencegahan menyalakan kipas pembuangan untuk menjaga sirkulasi udara.
-      </p>
-    </div>
-    <div class="image-block">
-      <img src="https://images.unsplash.com/photo-1563206767-5b18f218e8de?auto=format&fit=crop&w=600&q=80" alt="Hardware View" class="tilt-img">
-    </div>
-  </section>
-
   <!-- FOOTER LENGKAP -->
   <footer class="site-footer" id="kontak">
     <div class="footer-container">
@@ -360,10 +246,11 @@
 
       <div class="footer-col links-col">
         <h4>Tautan Cepat</h4>
+        <!-- LINK FOOTER DIUPDATE -->
         <ul>
-          <li><a href="#beranda">Beranda</a></li>
-          <li><a href="#tentang">Tentang Kami</a></li>
-          <li><a href="#layanan">Layanan Sistem</a></li>
+          <li><a href="/">Beranda</a></li>
+          <li><a href="/tentang">Tentang Kami</a></li>
+          <li><a href="/layanan">Layanan Sistem</a></li>
           <li><a href="/dashboard">Buka Dashboard</a></li>
         </ul>
       </div>
@@ -382,35 +269,15 @@
     </div>
   </footer>
 
-  <!-- SCRIPT NAVBAR SCROLL -->
+  <!-- SCRIPT NAVBAR (Sudah disederhanakan karena tidak one-page lagi) -->
   <script>
     const navbar = document.getElementById('main-navbar');
-    const sections = document.querySelectorAll("section, footer, .team-section");
-    const navLinks = document.querySelectorAll(".nav-menu a");
-
     window.addEventListener('scroll', function() {
       if (window.scrollY > 30) {
         navbar.classList.add('scrolled');
       } else {
         navbar.classList.remove('scrolled');
       }
-
-      let current = "";
-      sections.forEach((section) => {
-        const sectionTop = section.offsetTop;
-        if (pageYOffset >= sectionTop - 250) {
-          current = section.getAttribute("id") || current;
-        }
-      });
-
-      navLinks.forEach((a) => {
-        a.classList.remove("active");
-        a.querySelector(".icon-box").classList.remove("solid");
-        if (a.getAttribute("href") === "#" + current) {
-          a.classList.add("active");
-          a.querySelector(".icon-box").classList.add("solid");
-        }
-      });
     });
   </script>
 
