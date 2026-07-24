@@ -31,10 +31,17 @@ def get_db():
 def index():
     return render_template("index.html")
 
-
 @app.route("/dashboard")
 def dashboard():
     return render_template("dashboard.html")
+
+@app.route("/layanan")
+def layanan():
+    return render_template("layanan.html")
+
+@app.route("/tentang")
+def tentang():
+    return render_template("tentang.html")
 
 
 # =============================================================
