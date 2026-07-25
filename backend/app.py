@@ -13,10 +13,10 @@ app = Flask(__name__)
 # KONFIGURASI DATABASE (lokal - XAMPP/Laragon)
 # =============================================================
 DB_CONFIG = {
-    "host": "127.0.0.1",
-    "user": "root",
-    "passwd": "",
-    "db": "tb_riwayat", # database awal iot_database
+    "host": "bfirhu7hn8arbckpenlz-mysql.services.clever-cloud.com",
+    "user": "uy35lfb8ur1ovxnk",
+    "passwd": "PaSzi1orHOPyvTt0Jw8d",
+    "db": "bfirhu7hn8arbckpenlz", # database awal iot_database
 }
 
 def get_db():
