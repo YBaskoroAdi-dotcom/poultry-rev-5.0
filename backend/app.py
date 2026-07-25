@@ -3,18 +3,19 @@ import pymysql
 import pymysql.cursors
 import pandas as pd
 import io
+import os  # WAJIB IMPORT OS
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
 # =============================================================
-# KONFIGURASI DATABASE ONLINE (Clever Cloud)
+# KONFIGURASI DATABASE (Otomatis Baca dari Vercel Environment)
 # =============================================================
 DB_CONFIG = {
-    "host": "bfirhu7hn8arbckpenlz-mysql.services.clever-cloud.com",
-    "user": "uy35lfb8urlovxnk",             # Pastikan sama persis
-    "password": "PaSzilorHOPyvTt0Jw8d",     # Salin ulang langsung dari Clever Cloud!
-    "database": "bfirhu7hn8arbckpenlz",     # Pastikan sama persis
+    "host": os.getenv("DB_HOST", "bfirhu7hn8arbckpenlz-mysql.services.clever-cloud.com"),
+    "user": os.getenv("DB_USER", "uy35lfb8urlovxnk"),
+    "password": os.getenv("DB_PASSWORD", "PaSzilorHOPyvTt0Jw8d"),
+    "database": os.getenv("DB_NAME", "bfirhu7hn8arbckpenlz"),
     "port": 3306,
     "connect_timeout": 10,
     "autocommit": True
