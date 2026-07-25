@@ -5,7 +5,7 @@ import MySQLdb
 import MySQLdb.cursors
 import pandas as pd
 import io
-from datetime import datetime
+from datetime import datetime, timedelta # Tambahan timedelta untuk hitung hari mundur
 
 app = Flask(__name__)
 
@@ -19,10 +19,8 @@ DB_CONFIG = {
     "db": "tb_riwayat", # database awal iot_database
 }
 
-
 def get_db():
     return MySQLdb.connect(**DB_CONFIG)
-
 
 # =============================================================
 # HALAMAN FRONTEND
@@ -42,7 +40,6 @@ def layanan():
 @app.route("/tentang")
 def tentang():
     return render_template("tentang.html")
-
 
 # =============================================================
 # 1. CREATE -> ESP32 kirim data sensor tiap beberapa menit
@@ -78,7 +75,6 @@ def log_data():
 
     return jsonify({"status": "ok", "id": new_id}), 201
 
-
 # =============================================================
 # 2. READ -> data terbaru buat kartu real-time di dashboard
 # =============================================================
@@ -86,7 +82,7 @@ def log_data():
 def get_latest():
     db = get_db()
     cur = db.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute("SELECT * FROM tb_riwayat ORDER BY id DESC LIMIT 1") #database awal sensor_logs
+    cur.execute("SELECT * FROM tb_riwayat ORDER BY id DESC LIMIT 1") 
     row = cur.fetchone()
     cur.close()
     db.close()
@@ -96,7 +92,6 @@ def get_latest():
 
     row["waktu"] = row["waktu"].strftime("%Y-%m-%d %H:%M:%S")
     return jsonify(row)
-
 
 # =============================================================
 # 3. READ -> history buat grafik Chart.js
@@ -108,19 +103,54 @@ def get_history():
     db = get_db()
     cur = db.cursor(MySQLdb.cursors.DictCursor)
     cur.execute(
-        "SELECT * FROM tb_riwayat ORDER BY id DESC LIMIT %s", (limit,) #database awal sensor_logs
+        "SELECT * FROM tb_riwayat ORDER BY id DESC LIMIT %s", (limit,) 
     )
     rows = cur.fetchall()
     cur.close()
     db.close()
 
-    # dibalik supaya urut dari yang paling lama -> terbaru (enak buat grafik)
     rows.reverse()
     for r in rows:
         r["waktu"] = r["waktu"].strftime("%Y-%m-%d %H:%M:%S")
 
     return jsonify(rows)
 
+# =============================================================
+# FITUR BARU: READ -> Data Log Harian Berdasarkan Tab Day 1-5
+# =============================================================
+@app.route("/api/logs_harian", methods=["GET"])
+def get_logs_harian():
+    day_id = request.args.get("day", default="day1")
+    
+    # Hitung mundur tanggal target berdasarkan Tab yang di-klik
+    hari_ini = datetime.now().date()
+    if day_id == "day2":
+        target_date = hari_ini - timedelta(days=1)
+    elif day_id == "day3":
+        target_date = hari_ini - timedelta(days=2)
+    elif day_id == "day4":
+        target_date = hari_ini - timedelta(days=3)
+    elif day_id == "day5":
+        target_date = hari_ini - timedelta(days=4)
+    else: # Default ke day1 (Hari Ini)
+        target_date = hari_ini
+
+    db = get_db()
+    cur = db.cursor(MySQLdb.cursors.DictCursor)
+    
+    # Filter cuma data yang tanggalnya cocok sama target_date
+    cur.execute(
+        "SELECT * FROM tb_riwayat WHERE DATE(waktu) = %s ORDER BY waktu DESC",
+        (target_date,)
+    )
+    rows = cur.fetchall()
+    cur.close()
+    db.close()
+
+    for r in rows:
+        r["waktu"] = r["waktu"].strftime("%Y-%m-%d %H:%M:%S")
+
+    return jsonify(rows)
 
 # =============================================================
 # 4 & 5. READ/UPDATE -> settings (threshold + mode auto/manual)
@@ -135,19 +165,11 @@ def get_settings():
     db.close()
     return jsonify(row)
 
-
 @app.route("/api/settings", methods=["POST"])
 def update_settings():
     data = request.get_json(force=True)
 
-    allowed_fields = [
-        "batas_suhu",
-        "batas_jarak",
-        "batas_gas",
-        "mode",
-        "kipas_manual",
-        "servo_manual",
-    ]
+    allowed_fields = ["batas_suhu", "batas_jarak", "batas_gas", "mode", "kipas_manual", "servo_manual"]
     updates = {k: v for k, v in data.items() if k in allowed_fields}
 
     if not updates:
@@ -165,14 +187,13 @@ def update_settings():
 
     return jsonify({"status": "ok", "updated": updates})
 
-
 # =============================================================
 # 6. EXPORT -> unduh riwayat data sebagai CSV
 # =============================================================
 @app.route("/api/export", methods=["GET"])
 def export_csv():
     db = get_db()
-    df = pd.read_sql("SELECT * FROM tb_riwayat ORDER BY id ASC", db) #database awal sensor_logs
+    df = pd.read_sql("SELECT * FROM tb_riwayat ORDER BY id ASC", db) 
     db.close()
 
     buffer = io.StringIO()
@@ -186,20 +207,26 @@ def export_csv():
         headers={"Content-Disposition": f"attachment; filename={filename}"},
     )
 
-
 # =============================================================
-# 7. DELETE -> hapus data lama (manajemen kebersihan data)
+# 7. DELETE -> hapus data (Mendukung hapus semua atau hapus by Date)
 # =============================================================
 @app.route("/api/logs", methods=["DELETE"])
 def delete_old_logs():
     before = request.args.get("before")  # format: YYYY-MM-DD
-
-    if not before:
-        return jsonify({"error": "Parameter 'before' wajib diisi, contoh: ?before=2026-06-01"}), 400
+    delete_all = request.args.get("all") # format: true
 
     db = get_db()
     cur = db.cursor()
-    cur.execute("DELETE FROM tb_riwayat WHERE waktu < %s", (before,)) #database awal sensor_logs
+
+    if delete_all == "true":
+        # Kosongkan semua isi tabel riwayat
+        cur.execute("DELETE FROM tb_riwayat")
+    elif before:
+        # Hapus data yang lebih lama dari tanggal yang dipilih
+        cur.execute("DELETE FROM tb_riwayat WHERE waktu < %s", (before,))
+    else:
+        return jsonify({"error": "Parameter 'before' atau 'all' wajib diisi"}), 400
+
     db.commit()
     deleted_count = cur.rowcount
     cur.close()
@@ -207,7 +234,5 @@ def delete_old_logs():
 
     return jsonify({"status": "ok", "deleted_rows": deleted_count})
 
-
 if __name__ == "__main__":
-    # host 0.0.0.0 supaya ESP32 di jaringan WiFi yang sama bisa akses juga
     app.run(host="0.0.0.0", port=5000, debug=True)

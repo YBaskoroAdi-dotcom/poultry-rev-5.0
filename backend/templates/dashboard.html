@@ -20,6 +20,7 @@
     --danger-soft: #fbe9e9;
     --amber: #c9860f;
     --card: #ffffff;
+    --modal-bg: rgba(0, 0, 0, 0.4);
   }
 
   /* --- TEMA GELAP --- */
@@ -35,6 +36,7 @@
     --danger-soft: rgba(239, 68, 68, 0.15);
     --amber: #f2a33c;
     --card: #151a20;
+    --modal-bg: rgba(0, 0, 0, 0.7);
   }
 
   *{box-sizing:border-box;}
@@ -63,7 +65,7 @@
   
   .main-content { flex: 1; display: flex; flex-direction: column; width: calc(100% - 72px); }
 
-  /* --- HEADER DASHBOARD (DENGAN TOMBOL TEMA) --- */
+  /* --- HEADER DASHBOARD --- */
   header { display:flex; justify-content:space-between; align-items:center; padding:20px 32px; background:var(--bg-0); position:sticky; top:0; z-index:10; transition: background 0.3s ease; }
   header h1 { font-size:1.3rem; margin:0; letter-spacing:-0.01em; color: var(--ink-0); transition: color 0.3s ease; }
   
@@ -89,22 +91,50 @@
 
   .form-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:16px; }
   .field label{ display:block; font-size:0.8rem; color:var(--ink-1); margin-bottom:6px; }
-  .field input{ width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px; font-size:0.95rem; background: var(--bg-0); color: var(--ink-0); transition: all 0.3s ease; }
+  .field input, .field select{ width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px; font-size:0.95rem; background: var(--bg-0); color: var(--ink-0); transition: all 0.3s ease; }
   .mode-toggle{ display:flex; gap:8px; margin-bottom:16px; }
   .mode-toggle button{ flex:1; padding:10px; border-radius:8px; border:1px solid var(--line); background:var(--bg-0); cursor:pointer; font-weight:600; color:var(--ink-1); transition: all 0.3s ease;}
-  .mode-toggle button.active{ background:var(--accent); color:#fff; border-color:var(--accent); }
+  .mode-toggle button.active{ background:var(--accent); color:#000; border-color:var(--accent); }
   .manual-controls{ display:none; gap:12px; margin-bottom:16px; align-items:center; flex-wrap:wrap; }
   .manual-controls.show{ display:flex; }
   
-  .btn{ padding:11px 20px; border-radius:8px; border:none; cursor:pointer; font-weight:600; font-size:0.9rem; transition: all 0.3s ease; }
+  .btn{ padding:11px 20px; border-radius:8px; border:none; cursor:pointer; font-weight:600; font-size:0.9rem; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px;}
   .btn-primary{ background:var(--accent); color:#000; }
+  .btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 4px 12px rgba(55, 224, 196, 0.3); }
   .btn-outline{ background:var(--bg-0); border:1px solid var(--line); color:var(--ink-0); }
-  .btn-danger{ background:var(--danger-soft); color:var(--danger); border:1px solid rgba(239, 68, 68, 0.3); }
+  .btn-danger{ background:var(--danger); color:#fff; }
+  .btn-danger:hover{ background: #dc2626; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
   .btn-toggle-manual{ background:var(--accent-soft); color:var(--accent); border:1px solid rgba(55, 224, 196, 0.4); }
 
   canvas{ max-height:320px; }
-  .row-inline{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
   #status-msg{ font-size:0.85rem; margin-top:12px; color:var(--ink-1); }
+
+  /* --- LOG TABEL & TABS --- */
+  .log-container { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .tabs { display: flex; background: var(--bg-0); border-bottom: 1px solid var(--line); overflow-x: auto; }
+  .tab-btn { flex: 1; padding: 14px 20px; border: none; background: transparent; color: var(--ink-1); font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.3s ease; white-space: nowrap; }
+  .tab-btn:hover { color: var(--ink-0); background: var(--card); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--card); }
+  
+  .table-responsive { overflow-x: auto; max-height: 400px; }
+  .table-log { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+  .table-log th { position: sticky; top: 0; background: var(--card); color: var(--ink-1); padding: 14px 16px; font-weight: 600; border-bottom: 1px solid var(--line); z-index: 1; }
+  .table-log td { padding: 12px 16px; border-bottom: 1px solid var(--line); color: var(--ink-0); }
+  .table-log tr:hover { background: var(--bg-0); }
+  .table-log tr:last-child td { border-bottom: none; }
+
+  /* --- MODAL POP-UP --- */
+  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+  .modal-overlay.show { opacity: 1; pointer-events: auto; }
+  .modal-content { background: var(--card); width: 100%; max-width: 400px; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.3s ease; border: 1px solid var(--line); }
+  .modal-overlay.show .modal-content { transform: translateY(0); }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .modal-header h3 { margin: 0; font-size: 1.2rem; color: var(--ink-0); }
+  .close-btn { background: none; border: none; color: var(--ink-1); font-size: 1.2rem; cursor: pointer; transition: color 0.2s; }
+  .close-btn:hover { color: var(--danger); }
+  .modal-body { margin-bottom: 24px; }
+  .modal-footer { display: flex; justify-content: flex-end; gap: 12px; }
+
 </style>
 </head>
 <body>
@@ -155,6 +185,52 @@
         <canvas id="chart-sensor"></canvas>
       </section>
 
+      <!-- FITUR BARU: TABEL LOG 5 HARI -->
+      <section>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div>
+            <h2 style="margin-bottom: 4px;">📑 Log Data Harian</h2>
+            <p class="muted" style="margin:0;">Merekam data maksimal 5 hari ke belakang.</p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a class="btn btn-outline" href="/api/export"><i class="fa-solid fa-download"></i> Export CSV</a>
+            <button class="btn btn-danger" onclick="openDeleteModal()"><i class="fa-solid fa-trash-can"></i> Hapus Data</button>
+          </div>
+        </div>
+
+        <div class="log-container">
+          <!-- TABS -->
+          <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('day1', this)">Hari Ini</button>
+            <button class="tab-btn" onclick="switchTab('day2', this)">H-1</button>
+            <button class="tab-btn" onclick="switchTab('day3', this)">H-2</button>
+            <button class="tab-btn" onclick="switchTab('day4', this)">H-3</button>
+            <button class="tab-btn" onclick="switchTab('day5', this)">H-4</button>
+          </div>
+          
+          <!-- TABEL -->
+          <div class="table-responsive">
+            <table class="table-log">
+              <thead>
+                <tr>
+                  <th>Waktu</th>
+                  <th>Suhu (°C)</th>
+                  <th>Kelembapan (%)</th>
+                  <th>Gas (ppm)</th>
+                  <th>Jarak (cm)</th>
+                  <th>Kipas</th>
+                  <th>Servo</th>
+                </tr>
+              </thead>
+              <tbody id="table-body">
+                <!-- Baris data akan diisi oleh JavaScript -->
+                <tr><td colspan="7" style="text-align: center; color: var(--ink-1);">Memuat data...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
       <section>
         <h2>⚙️ Pengaturan Batas Pemicu & Mode Kendali</h2>
         <p class="muted">Ubah batas suhu/jarak/gas, atau alihkan ke mode manual untuk kendali langsung.</p>
@@ -180,17 +256,38 @@
         <div id="status-msg"></div>
       </section>
 
-      <section>
-        <h2>📑 Riwayat Data</h2>
-        <p class="muted">Unduh seluruh log sensor, atau bersihkan data lama agar database tidak penuh.</p>
-        <div class="row-inline">
-          <a class="btn btn-outline" href="/api/export">⬇️ Export ke CSV</a>
-          <input type="date" id="in-delete-before" class="field" style="padding:10px;border:1px solid var(--line);border-radius:8px;">
-          <button class="btn btn-danger" onclick="deleteOldData()">🗑️ Hapus Data Sebelum Tanggal</button>
-        </div>
-      </section>
-
     </main>
+  </div>
+</div>
+
+<!-- MODAL HAPUS DATA -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Pilih Data yang Dihapus</h3>
+      <button class="close-btn" onclick="closeDeleteModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Pilih Opsi Penghapusan:</label>
+        <select id="modal-delete-option">
+          <option value="older_than_5">Hapus Data Lebih Dari 5 Hari (Otomatis Bersih)</option>
+          <option value="specific_date">Hapus Data Sebelum Tanggal Tertentu</option>
+          <option value="all">Kosongkan Semua Log Data (Reset)</option>
+        </select>
+      </div>
+      <div class="field" id="specific-date-wrapper" style="display: none; margin-top: 15px;">
+        <label>Pilih Tanggal:</label>
+        <input type="date" id="modal-delete-date">
+      </div>
+      <p style="font-size: 0.85rem; color: var(--danger); margin-top: 15px;">
+        <i class="fa-solid fa-triangle-exclamation"></i> Peringatan: Data yang dihapus tidak dapat dikembalikan.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeDeleteModal()">Batal</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Ya, Hapus Data</button>
+    </div>
   </div>
 </div>
 
@@ -219,7 +316,6 @@ themeBtn.addEventListener('click', () => {
   localStorage.setItem('theme', currentTheme);
   applyTheme(currentTheme);
 });
-
 
 // --- LOGIC CHART.JS ---
 const ctx = document.getElementById('chart-sensor');
@@ -262,7 +358,7 @@ function updateChartColors(textColor, gridColor) {
 
 applyTheme(currentTheme);
 
-// --- LOGIC IOT DASHBOARD BAWAAN (TETAP SAMA) ---
+// --- LOGIC IOT DASHBOARD BAWAAN ---
 let currentMode = 'auto';
 let currentThresholds = { batas_suhu: 30, batas_jarak: 20, batas_gas: 500 };
 let kipasManualState = 'OFF';
@@ -294,7 +390,7 @@ async function refreshHistory() {
     chart.data.datasets[0].data = rows.map(r => r.suhu);
     chart.data.datasets[1].data = rows.map(r => r.gas);
     chart.update();
-  } catch (e) { console.error('Gagal ambil history:', e); }
+  } catch (e) { console.error('Gagal ambil history grafik:', e); }
 }
 
 async function loadSettings() {
@@ -351,21 +447,112 @@ async function postSettings(payload) {
   } catch (e) { msg.innerText = '❌ Tidak bisa terhubung ke server.'; }
 }
 
-async function deleteOldData() {
-  const before = document.getElementById('in-delete-before').value;
-  if (!before) { alert('Pilih tanggal batas dulu.'); return; }
-  if (!confirm('Hapus semua data sebelum ' + before + '? Aksi ini tidak bisa dibatalkan.')) return;
-  try {
-    const res = await fetch('/api/logs?before=' + before, { method: 'DELETE' });
-    const d = await res.json();
-    alert('Berhasil menghapus ' + d.deleted_rows + ' baris data.');
-    refreshHistory();
-  } catch (e) { alert('Gagal menghapus data.'); }
+// --- LOGIC TABEL & MODAL HAPUS DATA ---
+let currentTab = 'day1';
+
+function switchTab(dayId, btnElement) {
+  currentTab = dayId;
+  // Update UI Tabs
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  btnElement.classList.add('active');
+  
+  // Sekarang udah nembak ke route backend lu yang beneran!
+  fetchLogTableData(dayId);
 }
 
+// Fungsi untuk ngisi tabel sesuai hari dari Flask API
+async function fetchLogTableData(dayId) {
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Memuat data...</td></tr>';
+  
+  try {
+    const res = await fetch(`/api/logs_harian?day=${dayId}`); 
+    if (!res.ok) return;
+    const rows = await res.json();
+    
+    tbody.innerHTML = '';
+    if(rows.length === 0) {
+       tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Tidak ada data untuk hari ini.</td></tr>';
+       return;
+    }
+
+    rows.forEach(r => {
+      // Bikin baris tabel untuk setiap data
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${r.waktu}</td>
+        <td>${r.suhu}</td>
+        <td>${r.kelembapan || '--'}</td>
+        <td>${r.gas}</td>
+        <td>${r.jarak || '--'}</td>
+        <td>${r.status_kipas || '--'}</td>
+        <td>${r.status_servo || '--'}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  } catch (e) { 
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--danger);">Gagal memuat data tabel.</td></tr>';
+  }
+}
+
+// Logic Pop-up Modal Delete
+const deleteModal = document.getElementById('deleteModal');
+const deleteOption = document.getElementById('modal-delete-option');
+const dateWrapper = document.getElementById('specific-date-wrapper');
+
+function openDeleteModal() {
+  deleteModal.classList.add('show');
+}
+
+function closeDeleteModal() {
+  deleteModal.classList.remove('show');
+}
+
+deleteOption.addEventListener('change', function() {
+  if (this.value === 'specific_date') {
+    dateWrapper.style.display = 'block';
+  } else {
+    dateWrapper.style.display = 'none';
+  }
+});
+
+async function confirmDelete() {
+  const option = deleteOption.value;
+  let apiUrl = '/api/logs?action=';
+
+  if (option === 'older_than_5') {
+    // Bikin format tanggal 5 hari yang lalu buat dikirim ke backend
+    let d = new Date();
+    d.setDate(d.getDate() - 5);
+    let beforeDate = d.toISOString().split('T')[0];
+    apiUrl = '/api/logs?before=' + beforeDate;
+    
+  } else if (option === 'specific_date') {
+    const before = document.getElementById('modal-delete-date').value;
+    if (!before) { alert('Pilih tanggal batas dulu bro.'); return; }
+    apiUrl = '/api/logs?before=' + before;
+    
+  } else if (option === 'all') {
+    apiUrl = '/api/logs?all=true'; 
+  }
+
+  try {
+    const res = await fetch(apiUrl, { method: 'DELETE' });
+    const d = await res.json();
+    alert('Berhasil menghapus ' + d.deleted_rows + ' baris data.');
+    closeDeleteModal();
+    refreshHistory();
+    fetchLogTableData(currentTab); // refresh tabel
+  } catch (e) { 
+    alert('Gagal menghapus data.'); 
+  }
+}
+
+// Inisialisasi
 loadSettings();
 refreshLatest();
 refreshHistory();
+fetchLogTableData('day1'); // Load tabel hari ini pertama kali
 setInterval(refreshLatest, 3000);
 setInterval(refreshHistory, 10000);
 </script>
