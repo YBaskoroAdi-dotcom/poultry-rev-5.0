@@ -12,9 +12,9 @@ app = Flask(__name__)
 # =============================================================
 DB_CONFIG = {
     "host": "bfirhu7hn8arbckpenlz-mysql.services.clever-cloud.com",
-    "user": "uy35lfb8urlovxnk",
-    "password": "PaSzilorHOPyvTt0Jw8d",
-    "database": "bfirhu7hn8arbckpenlz",
+    "user": "uy35lfb8urlovxnk",             # Pastikan sama persis
+    "password": "PaSzilorHOPyvTt0Jw8d",     # Salin ulang langsung dari Clever Cloud!
+    "database": "bfirhu7hn8arbckpenlz",     # Pastikan sama persis
     "port": 3306,
     "connect_timeout": 10,
     "autocommit": True
