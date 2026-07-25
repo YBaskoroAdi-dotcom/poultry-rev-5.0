@@ -14,9 +14,10 @@ app = Flask(__name__)
 # =============================================================
 DB_CONFIG = {
     "host": "bfirhu7hn8arbckpenlz-mysql.services.clever-cloud.com",
-    "user": "uy35lfb8ur1ovxnk",
-    "passwd": "PaSzi1orHOPyvTt0Jw8d",
-    "db": "bfirhu7hn8arbckpenlz", # database awal iot_database
+    "user": "uy35lfb8urlovxnk",
+    "passwd": "PaSzilorHOPyvTt0Jw8d",
+    "db": "bfirhu7hn8arbckpenlz",
+    "port": 3306
 }
 
 def get_db():
