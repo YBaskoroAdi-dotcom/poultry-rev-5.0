@@ -1,6 +1,6 @@
-# SIGMA IoT — Sistem Monitoring & Kendali Kandang Otomatis
+# Poultry Revolution 5.0 — Sistem Monitoring & Kendali Kandang Otomatis
 
-Dashboard web untuk memantau dan mengendalikan alat berbasis ESP32 (suhu, gas, jarak, kipas, servo) secara real-time, dengan penyimpanan riwayat data di MySQL.
+Dashboard web modern untuk memantau dan mengendalikan sistem iklim kandang unggas berbasis ESP32 (suhu, kelembapan, kadar gas, jarak, kipas relay, dan servo) secara *real-time*, terintegrasi dengan REST API Flask dan database MySQL.
 
 ## Fitur Utama (8 fitur)
 
@@ -29,7 +29,8 @@ iot-dashboard/
 │       ├── index.html                  # Landing page
 │       └── dashboard.html               # Dashboard monitoring & kendali
 ├── database/
-│   └── schema.sql                       # Struktur tabel MySQL
+│   └── schema.sql 						# Database lama
+│   └── tb_riwayat.sql                  # Database baru yang sudah terintegrasi  
 └── README.md
 ```
 
@@ -63,8 +64,7 @@ Backend + database dapat di-deploy ke **PythonAnywhere** (gratis, MySQL sudah te
 
 ## Kontributor
 
-- **[Nama 1]** — Backend Flask, database schema
-- **[Nama 2]** — Frontend dashboard, styling
-- **[Nama 3]** — Firmware ESP32, integrasi hardware
+- **MHD Adib Sholahuddin** — Backend Flask, database schema
+- **Adha Joy Eriyanto** — Frontend dashboard, styling
+- **Yudhistira Baskoro Adi Admojo** — Firmware ESP32, integrasi hardware
 
-*(Sesuaikan dengan pembagian kerja & commit masing-masing anggota)*
