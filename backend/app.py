@@ -16,7 +16,7 @@ DB_CONFIG = {
     "host": "127.0.0.1",
     "user": "root",
     "passwd": "",
-    "db": "iot_database",
+    "db": "tb_riwayat", # database awal iot_database
 }
 
 
@@ -86,7 +86,7 @@ def log_data():
 def get_latest():
     db = get_db()
     cur = db.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute("SELECT * FROM sensor_logs ORDER BY id DESC LIMIT 1")
+    cur.execute("SELECT * FROM tb_riwayat ORDER BY id DESC LIMIT 1") #database awal sensor_logs
     row = cur.fetchone()
     cur.close()
     db.close()
@@ -108,7 +108,7 @@ def get_history():
     db = get_db()
     cur = db.cursor(MySQLdb.cursors.DictCursor)
     cur.execute(
-        "SELECT * FROM sensor_logs ORDER BY id DESC LIMIT %s", (limit,)
+        "SELECT * FROM tb_riwayat ORDER BY id DESC LIMIT %s", (limit,) #database awal sensor_logs
     )
     rows = cur.fetchall()
     cur.close()
@@ -172,7 +172,7 @@ def update_settings():
 @app.route("/api/export", methods=["GET"])
 def export_csv():
     db = get_db()
-    df = pd.read_sql("SELECT * FROM sensor_logs ORDER BY id ASC", db)
+    df = pd.read_sql("SELECT * FROM tb_riwayat ORDER BY id ASC", db) #database awal sensor_logs
     db.close()
 
     buffer = io.StringIO()
@@ -199,7 +199,7 @@ def delete_old_logs():
 
     db = get_db()
     cur = db.cursor()
-    cur.execute("DELETE FROM sensor_logs WHERE waktu < %s", (before,))
+    cur.execute("DELETE FROM tb_riwayat WHERE waktu < %s", (before,)) #database awal sensor_logs
     db.commit()
     deleted_count = cur.rowcount
     cur.close()

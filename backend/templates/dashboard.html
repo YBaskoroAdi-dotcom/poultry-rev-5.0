@@ -5,193 +5,102 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard — SIGMA IoT</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<!-- Tambah FontAwesome buat ikon di Sidebar -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
-  :root{
-    --bg:#f4f6f7;
-    --card:#ffffff;
-    --line:#e4e8ea;
-    --ink-0:#1c2530;
-    --ink-1:#6b7680;
-    --accent:#0e8f7c;
-    --accent-soft:#e4f6f3;
-    --danger:#d64545;
-    --danger-soft:#fbe9e9;
-    --amber:#c9860f;
+  /* --- TEMA TERANG --- */
+  :root {
+    --bg-0: #f4f6f7;
+    --bg-1: #ffffff;
+    --line: #e4e8ea;
+    --ink-0: #1c2530;
+    --ink-1: #6b7680;
+    --accent: #0e8f7c;
+    --accent-soft: #e4f6f3;
+    --danger: #d64545;
+    --danger-soft: #fbe9e9;
+    --amber: #c9860f;
+    --card: #ffffff;
   }
+
+  /* --- TEMA GELAP --- */
+  body[data-theme="dark"] {
+    --bg-0: #0b0e12;
+    --bg-1: #151a20;
+    --line: rgba(255,255,255,0.08);
+    --ink-0: #f2f4f6;
+    --ink-1: #9aa4ad;
+    --accent: #37e0c4;
+    --accent-soft: rgba(55, 224, 196, 0.1);
+    --danger: #ef4444;
+    --danger-soft: rgba(239, 68, 68, 0.15);
+    --amber: #f2a33c;
+    --card: #151a20;
+  }
+
   *{box-sizing:border-box;}
-  body{
-    margin:0; background:var(--bg); color:var(--ink-0);
-    font-family:'Inter','Segoe UI',sans-serif;
-  }
+  body{ margin:0; background:var(--bg-0); color:var(--ink-0); font-family:'Inter','Segoe UI',sans-serif; transition: background 0.3s ease, color 0.3s ease; }
 
   /* --- LAYOUT SIDEBAR & MAIN CONTENT --- */
-  .app-container {
-    display: flex;
-    min-height: 100vh;
-  }
-
-  /* Sidebar */
-  .sidebar {
-    width: 250px;
-    background: var(--card);
-    border-right: 1px solid var(--line);
-    display: flex;
-    flex-direction: column;
-    transition: width 0.3s ease;
-    overflow: hidden; /* Biar tulisan gak keluar saat menciut */
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    z-index: 100;
-  }
-  .sidebar.collapsed { width: 72px; }
-
-  /* Bagian Atas Sidebar (Logo + Tombol Toggle) */
-  .sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px;
-    height: 72px;
-    border-bottom: 1px solid var(--line);
-  }
+  .app-container { display: flex; min-height: 100vh; }
   
-  /* Logo cuma kelihatan penuh kalau sidebar kebuka */
-  .brand-area {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    opacity: 1;
-    transition: opacity 0.2s ease, width 0.2s ease;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-  .sidebar.collapsed .brand-area {
-    opacity: 0;
-    width: 0;
-    pointer-events: none;
-  }
+  .sidebar { width: 250px; background: var(--card); border-right: 1px solid var(--line); display: flex; flex-direction: column; transition: width 0.3s ease, background 0.3s ease, border-color 0.3s ease; overflow: hidden; position: sticky; top: 0; height: 100vh; z-index: 100; }
+  .sidebar.collapsed { width: 72px; }
+  .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 20px; height: 72px; border-bottom: 1px solid var(--line); }
+  .brand-area { display: flex; align-items: center; gap: 10px; opacity: 1; transition: opacity 0.2s ease, width 0.2s ease; white-space: nowrap; overflow: hidden; }
+  .sidebar.collapsed .brand-area { opacity: 0; width: 0; pointer-events: none; }
   .brand-area img { width: 32px; height: 32px; border-radius: 6px; }
-  .brand-area span { font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; }
-
-  /* Tombol Hamburger */
-  .btn-toggle {
-    background: none;
-    border: none;
-    font-size: 1.3rem;
-    color: var(--ink-0);
-    cursor: pointer;
-    padding: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  /* Kalau collapsed, posisi tombol ke tengah */
-  .sidebar.collapsed .btn-toggle { margin: 0 auto; } 
-
-  /* Navigasi Sidebar Sesuai Sketsa */
-  .sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    padding: 20px 0;
-    gap: 5px;
-  }
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 12px 24px;
-    color: var(--ink-1);
-    text-decoration: none;
-    font-weight: 500;
-    white-space: nowrap;
-    transition: background 0.2s, color 0.2s;
-  }
-  .nav-item:hover, .nav-item.active {
-    background: var(--accent-soft);
-    color: var(--accent);
-    border-right: 3px solid var(--accent);
-  }
+  .brand-area span { font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; color: var(--ink-0); }
+  
+  .btn-toggle { background: none; border: none; font-size: 1.3rem; color: var(--ink-0); cursor: pointer; padding: 5px; display: flex; align-items: center; justify-content: center; transition: color 0.3s ease; }
+  .sidebar.collapsed .btn-toggle { margin: 0 auto; }
+  
+  .sidebar-nav { display: flex; flex-direction: column; padding: 20px 0; gap: 5px; }
+  .nav-item { display: flex; align-items: center; gap: 15px; padding: 12px 24px; color: var(--ink-1); text-decoration: none; font-weight: 500; white-space: nowrap; transition: background 0.2s, color 0.2s; }
+  .nav-item:hover, .nav-item.active { background: var(--accent-soft); color: var(--accent); border-right: 3px solid var(--accent); }
   .nav-item i { font-size: 1.1rem; width: 24px; text-align: center; }
   .nav-item span { transition: opacity 0.2s ease; }
   .sidebar.collapsed .nav-item span { opacity: 0; pointer-events: none; }
-
-  /* Main Content Area */
-  .main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    width: calc(100% - 72px);
-  }
-
-  /* --- HEADER DASHBOARD (Sekarang ga pakai logo lagi) --- */
-  header {
-    display:flex; justify-content:space-between; align-items:center;
-    padding:20px 32px; background:var(--bg); 
-    position:sticky; top:0; z-index:10;
-  }
-  header h1 { font-size:1.3rem; margin:0; letter-spacing:-0.01em; }
   
+  .main-content { flex: 1; display: flex; flex-direction: column; width: calc(100% - 72px); }
+
+  /* --- HEADER DASHBOARD (DENGAN TOMBOL TEMA) --- */
+  header { display:flex; justify-content:space-between; align-items:center; padding:20px 32px; background:var(--bg-0); position:sticky; top:0; z-index:10; transition: background 0.3s ease; }
+  header h1 { font-size:1.3rem; margin:0; letter-spacing:-0.01em; color: var(--ink-0); transition: color 0.3s ease; }
+  
+  .btn-theme { background: var(--card); border: 1px solid var(--line); color: var(--ink-0); width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+  .btn-theme:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+
   main.dashboard-body { max-width:1100px; margin:0 auto; padding:10px 32px 80px; width: 100%; }
 
-  /* --- Alert banner (fitur 6) --- */
-  #alert-banner{
-    display:none; background:var(--danger); color:#fff; font-weight:600;
-    padding:14px 20px; border-radius:12px; margin-bottom:20px;
-    animation:blink 1s infinite;
-  }
+  /* --- Komponen Utama --- */
+  #alert-banner{ display:none; background:var(--danger); color:#fff; font-weight:600; padding:14px 20px; border-radius:12px; margin-bottom:20px; animation:blink 1s infinite; }
   @keyframes blink{ 50%{ opacity:0.55; } }
 
-  /* --- Cards real-time (fitur 2) --- */
-  .grid-cards{
-    display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-    gap:14px; margin-bottom:28px;
-  }
-  .card{
-    background:var(--card); border:1px solid var(--line); border-radius:14px;
-    padding:18px; text-align:center;
-  }
+  .grid-cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:28px; }
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; text-align:center; transition: all 0.3s ease; }
   .card .label{ font-size:0.8rem; color:var(--ink-1); margin-bottom:8px; }
-  .card .value{ font-size:1.8rem; font-weight:700; }
+  .card .value{ font-size:1.8rem; font-weight:700; color: var(--ink-0); }
   .card .value.ok{ color:var(--accent); }
   .card .value.warn{ color:var(--danger); }
 
-  section{
-    background:var(--card); border:1px solid var(--line); border-radius:14px;
-    padding:22px; margin-bottom:20px;
-  }
-  section h2{ font-size:1rem; margin:0 0 16px; }
+  section{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px; margin-bottom:20px; transition: all 0.3s ease; }
+  section h2{ font-size:1rem; margin:0 0 16px; color: var(--ink-0); }
   .muted{ color:var(--ink-1); font-size:0.85rem; margin-top:-8px; margin-bottom:16px;}
 
-  /* --- Form settings (fitur 4 & 5) --- */
-  .form-row{
-    display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-    gap:14px; margin-bottom:16px;
-  }
+  .form-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:16px; }
   .field label{ display:block; font-size:0.8rem; color:var(--ink-1); margin-bottom:6px; }
-  .field input{
-    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px;
-    font-size:0.95rem;
-  }
+  .field input{ width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px; font-size:0.95rem; background: var(--bg-0); color: var(--ink-0); transition: all 0.3s ease; }
   .mode-toggle{ display:flex; gap:8px; margin-bottom:16px; }
-  .mode-toggle button{
-    flex:1; padding:10px; border-radius:8px; border:1px solid var(--line);
-    background:#fff; cursor:pointer; font-weight:600; color:var(--ink-1);
-  }
+  .mode-toggle button{ flex:1; padding:10px; border-radius:8px; border:1px solid var(--line); background:var(--bg-0); cursor:pointer; font-weight:600; color:var(--ink-1); transition: all 0.3s ease;}
   .mode-toggle button.active{ background:var(--accent); color:#fff; border-color:var(--accent); }
   .manual-controls{ display:none; gap:12px; margin-bottom:16px; align-items:center; flex-wrap:wrap; }
   .manual-controls.show{ display:flex; }
   
-  .btn{
-    padding:11px 20px; border-radius:8px; border:none; cursor:pointer;
-    font-weight:600; font-size:0.9rem;
-  }
-  .btn-primary{ background:var(--accent); color:#fff; }
-  .btn-outline{ background:#fff; border:1px solid var(--line); color:var(--ink-0); }
-  .btn-danger{ background:var(--danger-soft); color:var(--danger); border:1px solid #f2c9c9; }
-  .btn-toggle-manual{ background:var(--accent-soft); color:var(--accent); border:1px solid #bfe6de; }
+  .btn{ padding:11px 20px; border-radius:8px; border:none; cursor:pointer; font-weight:600; font-size:0.9rem; transition: all 0.3s ease; }
+  .btn-primary{ background:var(--accent); color:#000; }
+  .btn-outline{ background:var(--bg-0); border:1px solid var(--line); color:var(--ink-0); }
+  .btn-danger{ background:var(--danger-soft); color:var(--danger); border:1px solid rgba(239, 68, 68, 0.3); }
+  .btn-toggle-manual{ background:var(--accent-soft); color:var(--accent); border:1px solid rgba(55, 224, 196, 0.4); }
 
   canvas{ max-height:320px; }
   .row-inline{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
@@ -202,50 +111,35 @@
 
 <div class="app-container">
   
-  <!-- SIDEBAR BARU -->
   <aside class="sidebar collapsed" id="sidebar">
     <div class="sidebar-header">
-      <div class="brand-area">
-        <img src="/static/img/Logo.png" alt="Logo SIGMA">
-        <span>SIGMA.IOT</span>
-      </div>
-      <button class="btn-toggle" onclick="toggleSidebar()">
-        <i class="fa-solid fa-bars"></i>
-      </button>
+      <div class="brand-area"><img src="/static/img/Logo.png" alt="Logo SIGMA"><span>SIGMA.IOT</span></div>
+      <button class="btn-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
     </div>
-
-    <!-- Menu Sesuai Sketsa Teman Lu -->
     <nav class="sidebar-nav">
-      <a href="/" class="nav-item">
-        <i class="fa-solid fa-house"></i> <span>Beranda</span>
-      </a>
-      <a href="/layanan" class="nav-item">
-        <i class="fa-solid fa-cogs"></i> <span>Layanan Sistem</span>
-      </a>
-      <a href="/tentang" class="nav-item">
-        <i class="fa-solid fa-users"></i> <span>Tentang Kami</span>
-      </a>
-      
+      <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> <span>Beranda</span></a>
+      <a href="/layanan" class="nav-item"><i class="fa-solid fa-cogs"></i> <span>Layanan Sistem</span></a>
+      <a href="/tentang" class="nav-item"><i class="fa-solid fa-users"></i> <span>Tentang Kami</span></a>
       <div style="margin: 20px 24px; border-top: 1px solid var(--line);"></div>
-      
-      <a href="/dashboard" class="nav-item active">
-        <i class="fa-solid fa-chart-line"></i> <span>Dashboard</span>
-      </a>
+      <a href="/dashboard" class="nav-item active"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a>
     </nav>
   </aside>
 
-  <!-- KONTEN UTAMA DASHBOARD -->
   <div class="main-content">
     <header>
-      <h1>Monitoring Status</h1>
-      <span class="muted" style="margin:0;">Diperbarui secara real-time</span>
+      <div>
+        <h1>Monitoring Status</h1>
+        <p class="muted" style="margin:0;">Diperbarui secara real-time</p>
+      </div>
+      <button id="btn-theme-toggle" class="btn-theme" title="Ganti Tema Warna">
+        <i class="fa-solid fa-moon"></i>
+      </button>
     </header>
 
     <main class="dashboard-body">
 
       <div id="alert-banner">⚠️ Kondisi kritis terdeteksi — cek suhu / kadar gas!</div>
 
-      <!-- FITUR 2: Dashboard real-time -->
       <div class="grid-cards">
         <div class="card"><div class="label">Suhu</div><div class="value ok" id="v-suhu">-- °C</div></div>
         <div class="card"><div class="label">Kelembapan</div><div class="value ok" id="v-hum">-- %</div></div>
@@ -255,23 +149,19 @@
         <div class="card"><div class="label">Servo</div><div class="value ok" id="v-servo">-- °</div></div>
       </div>
 
-      <!-- FITUR 3: Grafik fluktuasi -->
       <section>
         <h2>📈 Grafik Fluktuasi Suhu & Gas</h2>
         <p class="muted">50 data terakhir, diperbarui otomatis tiap 10 detik.</p>
         <canvas id="chart-sensor"></canvas>
       </section>
 
-      <!-- FITUR 4 & 5: Threshold + mode -->
       <section>
         <h2>⚙️ Pengaturan Batas Pemicu & Mode Kendali</h2>
         <p class="muted">Ubah batas suhu/jarak/gas, atau alihkan ke mode manual untuk kendali langsung.</p>
-
         <div class="mode-toggle">
           <button id="btn-mode-auto" class="active" onclick="setMode('auto')">🔁 Mode Auto</button>
           <button id="btn-mode-manual" onclick="setMode('manual')">🕹️ Mode Manual</button>
         </div>
-
         <div class="form-row">
           <div class="field"><label>Batas Suhu (°C)</label><input type="number" id="in-batas-suhu" step="0.1"></div>
           <div class="field"><label>Batas Jarak (cm)</label><input type="number" id="in-batas-jarak"></div>
@@ -287,18 +177,16 @@
             <input type="number" id="in-servo-manual" min="0" max="90" value="0" onchange="updateServoManual()">
           </div>
         </div>
-
         <div id="status-msg"></div>
       </section>
 
-      <!-- FITUR 7 & 8: Export & delete -->
       <section>
         <h2>📑 Riwayat Data</h2>
         <p class="muted">Unduh seluruh log sensor, atau bersihkan data lama agar database tidak penuh.</p>
         <div class="row-inline">
           <a class="btn btn-outline" href="/api/export">⬇️ Export ke CSV</a>
           <input type="date" id="in-delete-before" class="field" style="padding:10px;border:1px solid var(--line);border-radius:8px;">
-          <button class="btn btn-danger" onclick="deleteOldData()">🗑️ Hapus Data Sebelum Tanggal Ini</button>
+          <button class="btn btn-danger" onclick="deleteOldData()">🗑️ Hapus Data Sebelum Tanggal</button>
         </div>
       </section>
 
@@ -307,17 +195,33 @@
 </div>
 
 <script>
-// Logic Buka-Tutup Sidebar
-function toggleSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  sidebar.classList.toggle('collapsed');
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
+
+// --- LOGIC TEMA DARK/LIGHT MODE ---
+const themeBtn = document.getElementById('btn-theme-toggle');
+const themeIcon = themeBtn.querySelector('i');
+let currentTheme = localStorage.getItem('theme') || 'dark';
+
+function applyTheme(theme) {
+  if (theme === 'dark') {
+    document.body.setAttribute('data-theme', 'dark');
+    themeIcon.classList.replace('fa-moon', 'fa-sun');
+    updateChartColors('#9aa4ad', 'rgba(255,255,255,0.08)');
+  } else {
+    document.body.removeAttribute('data-theme');
+    themeIcon.classList.replace('fa-sun', 'fa-moon');
+    updateChartColors('#6b7680', '#e4e8ea');
+  }
 }
 
-// Logic Dashboard IoT Bawaan (Tetap Dipertahankan)
-let currentMode = 'auto';
-let currentThresholds = { batas_suhu: 30, batas_jarak: 20, batas_gas: 500 };
-let kipasManualState = 'OFF';
+themeBtn.addEventListener('click', () => {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('theme', currentTheme);
+  applyTheme(currentTheme);
+});
 
+
+// --- LOGIC CHART.JS ---
 const ctx = document.getElementById('chart-sensor');
 const chart = new Chart(ctx, {
   type: 'line',
@@ -331,28 +235,51 @@ const chart = new Chart(ctx, {
   options: {
     responsive: true,
     scales: {
-      y: { title: { display: true, text: 'Suhu (°C)' } },
-      y1: { position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Gas (ppm)' } }
-    }
+      x: { grid: { color: '#e4e8ea' }, ticks: { color: '#6b7680' } },
+      y: { title: { display: true, text: 'Suhu (°C)', color: '#6b7680' }, grid: { color: '#e4e8ea' }, ticks: { color: '#6b7680' } },
+      y1: { position: 'right', title: { display: true, text: 'Gas (ppm)', color: '#6b7680' }, grid: { drawOnChartArea: false }, ticks: { color: '#6b7680' } }
+    },
+    plugins: { legend: { labels: { color: '#6b7680' } } }
   }
 });
+
+function updateChartColors(textColor, gridColor) {
+  if(!chart) return;
+  Chart.defaults.color = textColor;
+  chart.options.scales.x.grid.color = gridColor;
+  chart.options.scales.x.ticks.color = textColor;
+  chart.options.scales.y.grid.color = gridColor;
+  chart.options.scales.y.ticks.color = textColor;
+  chart.options.scales.y.title.color = textColor;
+  chart.options.scales.y1.ticks.color = textColor;
+  chart.options.scales.y1.title.color = textColor;
+  chart.options.plugins.legend.labels.color = textColor;
+  
+  chart.data.datasets[0].borderColor = currentTheme === 'dark' ? '#37e0c4' : '#0e8f7c'; 
+  chart.data.datasets[1].borderColor = currentTheme === 'dark' ? '#f2a33c' : '#c9860f';
+  chart.update();
+}
+
+applyTheme(currentTheme);
+
+// --- LOGIC IOT DASHBOARD BAWAAN (TETAP SAMA) ---
+let currentMode = 'auto';
+let currentThresholds = { batas_suhu: 30, batas_jarak: 20, batas_gas: 500 };
+let kipasManualState = 'OFF';
 
 async function refreshLatest() {
   try {
     const res = await fetch('/api/latest');
     if (!res.ok) return;
     const d = await res.json();
-
     document.getElementById('v-suhu').innerText = d.suhu + ' °C';
     document.getElementById('v-hum').innerText = d.kelembapan + ' %';
     document.getElementById('v-gas').innerText = d.gas;
     document.getElementById('v-jarak').innerText = d.jarak + ' cm';
     document.getElementById('v-kipas').innerText = d.status_kipas;
     document.getElementById('v-servo').innerText = d.status_servo + ' °';
-
     const kritis = d.suhu > currentThresholds.batas_suhu + 5 || d.gas > currentThresholds.batas_gas;
     document.getElementById('alert-banner').style.display = kritis ? 'block' : 'none';
-
     document.getElementById('v-suhu').className = 'value ' + (d.suhu > currentThresholds.batas_suhu ? 'warn' : 'ok');
     document.getElementById('v-gas').className = 'value ' + (d.gas > currentThresholds.batas_gas ? 'warn' : 'ok');
   } catch (e) { console.error('Gagal ambil data terbaru:', e); }
@@ -392,10 +319,7 @@ function setModeUI(mode) {
   document.getElementById('manual-controls').classList.toggle('show', mode === 'manual');
 }
 
-async function setMode(mode) {
-  setModeUI(mode);
-  await postSettings({ mode });
-}
+async function setMode(mode) { setModeUI(mode); await postSettings({ mode }); }
 
 async function saveSettings() {
   const payload = {
@@ -421,43 +345,29 @@ async function updateServoManual() {
 async function postSettings(payload) {
   const msg = document.getElementById('status-msg');
   try {
-    const res = await fetch('/api/settings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    if (res.ok) {
-      msg.innerText = '✅ Pengaturan tersimpan (' + new Date().toLocaleTimeString() + ')';
-    } else {
-      msg.innerText = '❌ Gagal menyimpan pengaturan.';
-    }
-  } catch (e) {
-    msg.innerText = '❌ Tidak bisa terhubung ke server.';
-  }
+    const res = await fetch('/api/settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    if (res.ok) { msg.innerText = '✅ Pengaturan tersimpan (' + new Date().toLocaleTimeString() + ')'; } 
+    else { msg.innerText = '❌ Gagal menyimpan pengaturan.'; }
+  } catch (e) { msg.innerText = '❌ Tidak bisa terhubung ke server.'; }
 }
 
 async function deleteOldData() {
   const before = document.getElementById('in-delete-before').value;
   if (!before) { alert('Pilih tanggal batas dulu.'); return; }
   if (!confirm('Hapus semua data sebelum ' + before + '? Aksi ini tidak bisa dibatalkan.')) return;
-
   try {
     const res = await fetch('/api/logs?before=' + before, { method: 'DELETE' });
     const d = await res.json();
     alert('Berhasil menghapus ' + d.deleted_rows + ' baris data.');
     refreshHistory();
-  } catch (e) {
-    alert('Gagal menghapus data.');
-  }
+  } catch (e) { alert('Gagal menghapus data.'); }
 }
 
-// Inisialisasi
 loadSettings();
 refreshLatest();
 refreshHistory();
 setInterval(refreshLatest, 3000);
 setInterval(refreshHistory, 10000);
 </script>
-
 </body>
 </html>

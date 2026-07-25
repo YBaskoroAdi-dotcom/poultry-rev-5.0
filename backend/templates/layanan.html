@@ -6,27 +6,45 @@
 <title>Layanan — SIGMA IoT</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
-  :root{ 
-    --bg-0:#0b0e12; --bg-1:#151a20; --line:rgba(255,255,255,0.08); 
-    --ink-0:#f2f4f6; --ink-1:#9aa4ad; --accent:#37e0c4; 
+  /* --- TEMA TERANG --- */
+  :root {
+    --bg-0: #f4f6f7;
+    --bg-1: #ffffff;
+    --line: #e4e8ea;
+    --ink-0: #1c2530;
+    --ink-1: #6b7680;
+    --accent: #0e8f7c;
+    --accent-soft: #e4f6f3;
+    --amber: #c9860f;
   }
+
+  /* --- TEMA GELAP --- */
+  body[data-theme="dark"] {
+    --bg-0: #0b0e12;
+    --bg-1: #151a20;
+    --line: rgba(255,255,255,0.08);
+    --ink-0: #f2f4f6;
+    --ink-1: #9aa4ad;
+    --accent: #37e0c4;
+    --accent-soft: rgba(55, 224, 196, 0.1);
+    --amber: #f2a33c;
+  }
+
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0; overflow-x: hidden; scroll-behavior: smooth;}
   body{
-    background: radial-gradient(1200px 600px at 80% -10%, #1c2530 0%, transparent 60%), linear-gradient(180deg,var(--bg-0),var(--bg-1));
+    background: linear-gradient(180deg, var(--bg-0), var(--bg-1));
     color:var(--ink-0); font-family:'Inter','Segoe UI',sans-serif; min-height:100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+  body[data-theme="dark"] {
+    background: radial-gradient(1200px 600px at 80% -10%, #1c2530 0%, transparent 60%), linear-gradient(180deg, var(--bg-0), var(--bg-1));
   }
 
-  /* --- LAYOUT SIDEBAR & MAIN CONTENT --- */
   .app-container { display: flex; min-height: 100vh; }
   
-  .sidebar {
-    width: 250px; background: var(--bg-1); border-right: 1px solid var(--line);
-    display: flex; flex-direction: column; transition: width 0.3s ease;
-    overflow: hidden; position: sticky; top: 0; height: 100vh; z-index: 100;
-  }
+  .sidebar { width: 250px; background: var(--bg-1); border-right: 1px solid var(--line); display: flex; flex-direction: column; transition: width 0.3s ease; overflow: hidden; position: sticky; top: 0; height: 100vh; z-index: 100; }
   .sidebar.collapsed { width: 72px; }
-  
   .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 20px; height: 72px; border-bottom: 1px solid var(--line); }
   .brand-area { display: flex; align-items: center; gap: 10px; opacity: 1; transition: opacity 0.2s ease, width 0.2s ease; white-space: nowrap; overflow: hidden; }
   .sidebar.collapsed .brand-area { opacity: 0; width: 0; pointer-events: none; }
@@ -38,15 +56,17 @@
   
   .sidebar-nav { display: flex; flex-direction: column; padding: 20px 0; gap: 5px; }
   .nav-item { display: flex; align-items: center; gap: 15px; padding: 12px 24px; color: var(--ink-1); text-decoration: none; font-weight: 500; white-space: nowrap; transition: background 0.2s, color 0.2s; }
-  .nav-item:hover, .nav-item.active { background: rgba(55, 224, 196, 0.1); color: var(--accent); border-right: 3px solid var(--accent); }
+  .nav-item:hover, .nav-item.active { background: var(--accent-soft); color: var(--accent); border-right: 3px solid var(--accent); }
   .nav-item i { font-size: 1.1rem; width: 24px; text-align: center; }
   .nav-item span { transition: opacity 0.2s ease; }
   .sidebar.collapsed .nav-item span { opacity: 0; pointer-events: none; }
   
   .main-content { flex: 1; display: flex; flex-direction: column; width: calc(100% - 72px); }
 
-  /* --- KONTEN LAYANAN --- */
-  .content-section { width: 100%; padding: 100px 64px; display: flex; align-items: center; justify-content: space-between; gap: 40px; }
+  .btn-theme { background: var(--bg-1); border: 1px solid var(--line); color: var(--ink-0); width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+  .btn-theme:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+
+  .content-section { width: 100%; padding: 40px 64px 100px; display: flex; align-items: center; justify-content: space-between; gap: 40px; }
   .text-block { flex: 0 1 50%; text-align: left; } 
   .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 20px; }
   .text-block h2 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; margin: 0 0 20px; font-weight: 700; }
@@ -55,7 +75,6 @@
   .tilt-img { width: 100%; max-width: 650px; height: auto; border-radius: 20px; border: 1px solid var(--line); transition: transform 0.4s ease; }
   .tilt-img:hover { transform: rotate(3deg) scale(1.04); }
 
-  /* --- FOOTER --- */
   .site-footer { background: var(--bg-1); border-top: 1px solid var(--line); padding: 80px 64px 30px; margin-top: auto; }
   .footer-container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; max-width: 1440px; margin: 0 auto; border-bottom: 1px solid var(--line); padding-bottom: 40px; }
   .footer-col { flex: 1; min-width: 250px; }
@@ -63,8 +82,8 @@
   .brand-col h3 span { color: var(--accent); }
   .brand-col p { color: var(--ink-1); line-height: 1.6; margin-bottom: 25px; font-size: 0.95rem; }
   .social-icons { display: flex; gap: 15px; }
-  .social-link { display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: rgba(255,255,255,0.03); border-radius: 50%; color: var(--ink-0); text-decoration: none; border: 1px solid var(--line); transition: all 0.3s ease; }
-  .social-link:hover { background: var(--accent); color: var(--bg-0); }
+  .social-link { display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: rgba(100,100,100,0.05); border-radius: 50%; color: var(--ink-0); text-decoration: none; border: 1px solid var(--line); transition: all 0.3s ease; }
+  .social-link:hover { background: var(--accent); color: #000; }
   .footer-col h4 { color: var(--ink-0); font-size: 1.1rem; margin: 0 0 20px 0; }
   .footer-col ul { list-style: none; padding: 0; margin: 0; }
   .footer-col ul li { margin-bottom: 12px; }
@@ -78,39 +97,27 @@
 
 <div class="app-container">
   
-  <!-- SIDEBAR KIRI -->
   <aside class="sidebar collapsed" id="sidebar">
     <div class="sidebar-header">
-      <div class="brand-area">
-        <img src="/static/img/Logo.png" alt="Logo SIGMA">
-        <span>SIGMA.IOT</span>
-      </div>
-      <button class="btn-toggle" onclick="toggleSidebar()">
-        <i class="fa-solid fa-bars"></i>
-      </button>
+      <div class="brand-area"><img src="/static/img/Logo.png" alt="Logo SIGMA"><span>SIGMA.IOT</span></div>
+      <button class="btn-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
     </div>
-
     <nav class="sidebar-nav">
-      <a href="/" class="nav-item">
-        <i class="fa-solid fa-house"></i> <span>Beranda</span>
-      </a>
-      <!-- Active state di Layanan Sistem -->
-      <a href="/layanan" class="nav-item active">
-        <i class="fa-solid fa-cogs"></i> <span>Layanan Sistem</span>
-      </a>
-      <a href="/tentang" class="nav-item">
-        <i class="fa-solid fa-users"></i> <span>Tentang Kami</span>
-      </a>
+      <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> <span>Beranda</span></a>
+      <a href="/layanan" class="nav-item active"><i class="fa-solid fa-cogs"></i> <span>Layanan Sistem</span></a>
+      <a href="/tentang" class="nav-item"><i class="fa-solid fa-users"></i> <span>Tentang Kami</span></a>
       <div style="margin: 20px 24px; border-top: 1px solid var(--line);"></div>
-      <a href="/dashboard" class="nav-item">
-        <i class="fa-solid fa-chart-line"></i> <span>Dashboard</span>
-      </a>
+      <a href="/dashboard" class="nav-item"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a>
     </nav>
   </aside>
 
-  <!-- KONTEN UTAMA KANAN -->
   <div class="main-content">
     
+    <!-- HEADER KECIL UNTUK TOMBOL TEMA -->
+    <div style="display:flex; justify-content:flex-end; padding:20px 64px 0;">
+      <button id="btn-theme-toggle" class="btn-theme" title="Ganti Tema Warna"><i class="fa-solid fa-moon"></i></button>
+    </div>
+
     <section class="content-section">
       <div class="text-block">
         <div class="eyebrow">Sistem Otomatisasi</div>
@@ -123,48 +130,34 @@
         <img src="https://images.unsplash.com/photo-1563206767-5b18f218e8de?auto=format&fit=crop&w=600&q=80" alt="Hardware View" class="tilt-img">
       </div>
     </section>
-
-    <!-- FOOTER -->
-    <!--<footer class="site-footer">
-      <div class="footer-container">
-        <div class="footer-col brand-col">
-          <h3>SIGMA<span>.</span>IOT</h3>
-          <p>Sistem cerdas untuk pemantauan dan otomatisasi secara real-time.</p>
-          <div class="social-icons">
-            <a href="#" class="social-link"><i class="fa-brands fa-facebook-f"></i></a>
-            <a href="#" class="social-link"><i class="fa-brands fa-x-twitter"></i></a>
-            <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i></a>
-          </div>
-        </div>
-        <div class="footer-col links-col">
-          <h4>Tautan Cepat</h4>
-          <ul>
-            <li><a href="/">Beranda</a></li>
-            <li><a href="/tentang">Tentang Kami</a></li>
-            <li><a href="/layanan">Layanan Sistem</a></li>
-            <li><a href="/dashboard">Buka Dashboard</a></li>
-          </ul>
-        </div>
-        <div class="footer-col contact-col">
-          <h4>Hubungi Kami</h4>
-          <ul>
-            <li><i class="fa-solid fa-envelope" style="color:var(--accent);"></i> hello@sigmaiot.com</li>
-            <li><i class="fa-brands fa-whatsapp" style="color:var(--accent);"></i> +62 812 3456 7890</li>
-            <li><i class="fa-solid fa-location-dot" style="color:var(--accent);"></i> Yogyakarta, Indonesia</li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom"><p>&copy; 2026 SIGMA.IOT. All rights reserved.</p></div>
-    </footer>-->
-
   </div>
 </div>
 
-<!-- SCRIPT UNTUK SIDEBAR -->
 <script>
-  function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('collapsed');
+  function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
+
+  // --- SCRIPT SINKRONISASI TEMA ---
+  const themeBtn = document.getElementById('btn-theme-toggle');
+  const themeIcon = themeBtn.querySelector('i');
+  let currentTheme = localStorage.getItem('theme') || 'dark';
+
+  function applyTheme(theme) {
+    if (theme === 'dark') {
+      document.body.setAttribute('data-theme', 'dark');
+      themeIcon.classList.replace('fa-moon', 'fa-sun');
+    } else {
+      document.body.removeAttribute('data-theme');
+      themeIcon.classList.replace('fa-sun', 'fa-moon');
+    }
   }
+  
+  themeBtn.addEventListener('click', () => {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', currentTheme);
+    applyTheme(currentTheme);
+  });
+  
+  applyTheme(currentTheme);
 </script>
 </body>
 </html>

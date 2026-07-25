@@ -4,207 +4,128 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SIGMA — Sistem Monitoring Kandang Otomatis</title>
-<!-- CDN FontAwesome untuk Icon Sosmed -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
-  :root{
-    --bg-0:#0b0e12;
-    --bg-1:#151a20;
-    --line:rgba(255,255,255,0.08);
-    --ink-0:#f2f4f6;
-    --ink-1:#9aa4ad;
-    --accent:#37e0c4;
-    --amber:#f2a33c;
+  /* --- TEMA TERANG --- */
+  :root {
+    --bg-0: #f4f6f7;
+    --bg-1: #ffffff;
+    --line: #e4e8ea;
+    --ink-0: #1c2530;
+    --ink-1: #6b7680;
+    --accent: #0e8f7c;
+    --accent-soft: #e4f6f3;
+    --amber: #c9860f;
   }
+
+  /* --- TEMA GELAP --- */
+  body[data-theme="dark"] {
+    --bg-0: #0b0e12;
+    --bg-1: #151a20;
+    --line: rgba(255,255,255,0.08);
+    --ink-0: #f2f4f6;
+    --ink-1: #9aa4ad;
+    --accent: #37e0c4;
+    --accent-soft: rgba(55, 224, 196, 0.1);
+    --amber: #f2a33c;
+  }
+
   *{box-sizing:border-box;}
   
   html { scroll-behavior: smooth; }
   html,body{margin:0;padding:0; overflow-x: hidden;}
   
   body{
-    background:
-      radial-gradient(1200px 600px at 80% -10%, #1c2530 0%, transparent 60%),
-      linear-gradient(180deg,var(--bg-0),var(--bg-1));
-    color:var(--ink-0);
-    font-family:'Inter','Segoe UI',sans-serif;
-    min-height:100vh;
-    padding-top: 110px; 
+    background: linear-gradient(180deg, var(--bg-0), var(--bg-1));
+    color:var(--ink-0); font-family:'Inter','Segoe UI',sans-serif; min-height:100vh; padding-top: 110px; 
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+  
+  body[data-theme="dark"] {
+    background: radial-gradient(1200px 600px at 80% -10%, #1c2530 0%, transparent 60%), linear-gradient(180deg, var(--bg-0), var(--bg-1));
   }
 
-  /* --- HEADER & NAVBAR TRANSPARAN --- */
   nav.navbar {
     position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
     display: flex; justify-content: space-between; align-items: center;
     padding: 32px 64px; border-bottom: 1px solid var(--line);
-    background: rgba(11, 14, 18, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    background: rgba(var(--bg-0), 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
     transition: all 0.3s ease;
   }
-  nav.navbar.scrolled {
-    padding: 20px 64px; background: rgba(11, 14, 18, 0.85); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  }
+  nav.navbar.scrolled { padding: 20px 64px; background: var(--bg-0); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); }
   
-  /* PERBAIKAN UKURAN LOGO */
   .brand-group { display: flex; align-items: center; gap: 16px; }
   .brand-logo-img { width: 55px; height: 55px; object-fit: contain; border-radius: 6px; }
-  
-  .brand {
-    font-family: 'JetBrains Mono', 'Courier New', monospace; letter-spacing: 0.15em; 
-    font-size: 1.15rem; font-weight: 700; color: var(--ink-0);
-  }
+  .brand { font-family: 'JetBrains Mono', monospace; letter-spacing: 0.15em; font-size: 1.15rem; font-weight: 700; color: var(--ink-0); }
   .brand span { color: var(--accent); }
   
   .nav-menu { display: flex; align-items: center; gap: 32px; }
-  .nav-menu a {
-    color: var(--ink-1); text-decoration: none; font-size: 1.05rem; font-weight: 500;
-    display: flex; align-items: center; gap: 8px; margin-left: 0; transition: color 0.2s ease;
-  }
+  .nav-menu a { color: var(--ink-1); text-decoration: none; font-size: 1.05rem; font-weight: 500; display: flex; align-items: center; gap: 8px; margin-left: 0; transition: color 0.2s ease; }
   .nav-menu a:hover { color: var(--accent); }
   .nav-menu a.active { color: var(--accent); font-weight: 600; }
   
   .icon-box { display: inline-block; width: 12px; height: 10px; border: 1.5px solid var(--accent); border-radius: 2px; }
   .icon-box.solid { background-color: var(--accent); }
 
-  .btn-hubungi {
-    display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: #04201b; font-weight: 700;
-    padding: 12px 26px; border-radius: 100px; text-decoration: none; font-size: 0.95rem; transition: transform 0.25s ease, box-shadow 0.25s ease;
-  }
+  .btn-theme { background: transparent; border: 1px solid var(--line); color: var(--ink-0); width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all 0.3s ease; }
+  .btn-theme:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+
+  .btn-hubungi { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: #04201b; font-weight: 700; padding: 12px 26px; border-radius: 100px; text-decoration: none; font-size: 0.95rem; transition: transform 0.25s ease, box-shadow 0.25s ease; }
   .btn-hubungi:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(55, 224, 196, 0.3); }
 
-  /* --- LAYOUT UTAMA --- */
-  .content-section {
-    width: 100%; max-width: 100%; margin: 0; padding: 100px 64px; 
-    display: flex; align-items: center; justify-content: space-between; gap: 40px;
-  }
+  .content-section { width: 100%; max-width: 100%; margin: 0; padding: 100px 64px; display: flex; align-items: center; justify-content: space-between; gap: 40px; }
   .text-block { flex: 0 1 50%; text-align: left; } 
-
-  .eyebrow {
-    font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
-    color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 20px;
-  }
-  .text-block h1 {
-    font-size: clamp(2.4rem, 5vw, 4.2rem); line-height: 1.05; margin: 0 0 24px; font-weight: 800; letter-spacing: -0.02em;
-  }
+  .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 20px; }
+  .text-block h1 { font-size: clamp(2.4rem, 5vw, 4.2rem); line-height: 1.05; margin: 0 0 24px; font-weight: 800; letter-spacing: -0.02em; }
   .text-block h1 .dim { color: var(--ink-1); font-weight: 600; }
-  
-  .text-block .sub {
-    color: var(--ink-1); font-size: 1.15rem; max-width: 600px; line-height: 1.6; margin: 0 0 44px 0;
-  }
+  .text-block .sub { color: var(--ink-1); font-size: 1.15rem; max-width: 600px; line-height: 1.6; margin: 0 0 44px 0; }
 
-  .cta {
-    display: inline-flex; align-items: center; gap: 10px; background: var(--accent); color: #04201b; font-weight: 700;
-    padding: 16px 32px; border-radius: 100px; text-decoration: none; font-size: 1rem; transition: transform .25s ease, box-shadow .25s ease;
-  }
+  .cta { display: inline-flex; align-items: center; gap: 10px; background: var(--accent); color: #04201b; font-weight: 700; padding: 16px 32px; border-radius: 100px; text-decoration: none; font-size: 1rem; transition: transform .25s ease, box-shadow .25s ease; }
   .cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(55,224,196,0.25); }
 
-  /* --- ANIMASI GAMBAR --- */
   .image-block { flex: 0 1 45%; display: flex; justify-content: flex-end; }
-  
-  .tilt-img {
-    width: 100%; max-width: 650px; height: auto; border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-    border: 1px solid var(--line);
-  }
-  .tilt-img:hover {
-    transform: rotate(3deg) scale(1.04); box-shadow: 0 25px 45px rgba(55, 224, 196, 0.2); 
-  }
+  .tilt-img { width: 100%; max-width: 650px; height: auto; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); transition: transform 0.4s ease, box-shadow 0.4s ease; border: 1px solid var(--line); }
+  .tilt-img:hover { transform: rotate(3deg) scale(1.04); box-shadow: 0 25px 45px rgba(55, 224, 196, 0.2); }
 
-  /* --- TABEL SENSOR --- */
-  .readout-wrapper { 
-    width: 100%; max-width: 100%; margin: 0 auto 80px auto; padding: 0 64px; 
-  }
-  .readout {
-    display: grid; grid-template-columns: repeat(5,1fr); gap: 1px;
-    background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
-  }
+  .readout-wrapper { width: 100%; max-width: 100%; margin: 0 auto 80px auto; padding: 0 64px; }
+  .readout { display: grid; grid-template-columns: repeat(5,1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
   .readout .cell { background: var(--bg-1); padding: 24px 12px; text-align: center; }
   .readout .label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--ink-1); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
   .readout .value { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
 
-  /* --- FOOTER --- */
-  .site-footer {
-    background: var(--bg-1); border-top: 1px solid var(--line);
-    padding: 80px 64px 30px; margin-top: 40px;
-  }
-  .footer-container {
-    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px;
-    max-width: 1440px; margin: 0 auto; border-bottom: 1px solid var(--line); padding-bottom: 40px;
-  }
+  .site-footer { background: var(--bg-1); border-top: 1px solid var(--line); padding: 80px 64px 30px; margin-top: 40px; }
+  .footer-container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; max-width: 1440px; margin: 0 auto; border-bottom: 1px solid var(--line); padding-bottom: 40px; }
   .footer-col { flex: 1; min-width: 250px; }
-  .brand-col h3 {
-    font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 1.5rem;
-    color: var(--ink-0); margin: 0 0 15px 0; letter-spacing: 0.1em;
-  }
+  .brand-col h3 { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; color: var(--ink-0); margin: 0 0 15px 0; letter-spacing: 0.1em; }
   .brand-col h3 span { color: var(--accent); }
   .brand-col p { color: var(--ink-1); line-height: 1.6; margin-bottom: 25px; font-size: 0.95rem; max-width: 350px; }
-  
   .social-icons { display: flex; gap: 15px; }
-  .social-link {
-    display: flex; align-items: center; justify-content: center; width: 42px; height: 42px;
-    background: rgba(255,255,255,0.03); border-radius: 50%; color: var(--ink-0); font-size: 1.1rem;
-    text-decoration: none; transition: all 0.3s ease; border: 1px solid var(--line);
-  }
-  .social-link:hover {
-    background: var(--accent); color: var(--bg-0); border-color: var(--accent);
-    transform: translateY(-4px); box-shadow: 0 5px 15px rgba(55, 224, 196, 0.3);
-  }
-
+  .social-link { display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: rgba(100,100,100,0.05); border-radius: 50%; color: var(--ink-0); font-size: 1.1rem; text-decoration: none; transition: all 0.3s ease; border: 1px solid var(--line); }
+  .social-link:hover { background: var(--accent); color: #000; border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 5px 15px rgba(55, 224, 196, 0.3); }
   .footer-col h4 { color: var(--ink-0); font-size: 1.1rem; margin: 0 0 20px 0; font-weight: 600; }
   .footer-col ul { list-style: none; padding: 0; margin: 0; }
   .footer-col ul li { margin-bottom: 12px; }
-  .footer-col ul li a, .footer-col ul li {
-    color: var(--ink-1); text-decoration: none; font-size: 0.95rem; transition: color 0.3s ease;
-    display: flex; align-items: center; gap: 12px;
-  }
+  .footer-col ul li a, .footer-col ul li { color: var(--ink-1); text-decoration: none; font-size: 0.95rem; transition: color 0.3s ease; display: flex; align-items: center; gap: 12px; }
   .footer-col ul li a:hover { color: var(--accent); }
   .footer-col ul li i { color: var(--accent); font-size: 1rem; width: 20px; text-align: center; }
-
   .footer-bottom { text-align: center; padding-top: 30px; }
   .footer-bottom p { margin: 0; color: var(--ink-1); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
-
-  /* RESPONSIVE DESIGN */
-  @media (max-width: 1024px) {
-    .content-section { gap: 20px; }
-    .tilt-img { max-width: 500px; }
-  }
-  @media (max-width: 900px){
-    nav.navbar { padding: 20px 30px; }
-    .nav-menu { display: none; }
-    .content-section { padding: 60px 30px; flex-direction: column; text-align: left; justify-content: center;}
-    .image-block { justify-content: center; width: 100%; margin-top: 40px; }
-    .readout-wrapper { padding: 0 30px; }
-    .footer-container { flex-direction: column; gap: 30px; }
-    .site-footer { padding: 60px 30px 25px; }
-  }
-  @media (max-width: 720px){
-    .readout { grid-template-columns: repeat(2,1fr); }
-  }
 </style>
 </head>
 <body>
 
-  <!-- HEADER -->
   <nav class="navbar" id="main-navbar">
     <div class="brand-group">
       <img src="/static/img/Logo.png" alt="Logo SIGMA" class="brand-logo-img">
       <div class="brand">SIGMA<span>.</span>IOT</div>
     </div>
-
-    <!-- MENU NAVIGASI (COMMENT DIBUKA) -->
-    <!--<div class="nav-menu">
-      <a href="/" class="active"><span class="icon-box solid"></span> Beranda</a>
-      <a href="/tentang"><span class="icon-box"></span> Tentang Kami</a>
-      <a href="/layanan"><span class="icon-box"></span> Layanan</a>
-      <a href="#kontak"><span class="icon-box"></span> Kontak</a>
-    </div>-->
-
+    
     <div style="display: flex; align-items: center; gap: 16px;">
+      <button id="btn-theme-toggle" class="btn-theme" title="Ganti Tema Warna"><i class="fa-solid fa-moon"></i></button>
       <a href="https://wa.me/6281234567890" target="_blank" class="btn-hubungi">Hubungi Kami 💬</a>
-      <!--<a href="/dashboard" style="color: var(--ink-1); text-decoration: none; font-size: 0.85rem;">Dashboard</a>-->
     </div>
   </nav>
 
-  <!-- BAGIAN 1: BERANDA -->
   <section class="content-section" style="padding-top: 60px;">
     <div class="text-block">
       <div class="eyebrow">ESP32 · DHT22 · MQ-135 · Ultrasonic</div>
@@ -221,7 +142,6 @@
     </div>
   </section>
 
-  <!-- TABEL SENSOR -->
   <div class="readout-wrapper">
     <div class="readout">
       <div class="cell"><div class="label">Suhu</div><div class="value">°C</div></div>
@@ -232,7 +152,6 @@
     </div>
   </div>
 
-  <!-- FOOTER LENGKAP -->
   <footer class="site-footer" id="kontak">
     <div class="footer-container">
       <div class="footer-col brand-col">
@@ -246,10 +165,8 @@
           <a href="#" class="social-link" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
         </div>
       </div>
-
       <div class="footer-col links-col">
         <h4>Tautan Cepat</h4>
-        <!-- LINK FOOTER DIUPDATE -->
         <ul>
           <li><a href="/">Beranda</a></li>
           <li><a href="/tentang">Tentang Kami</a></li>
@@ -257,7 +174,6 @@
           <li><a href="/dashboard">Buka Dashboard</a></li>
         </ul>
       </div>
-
       <div class="footer-col contact-col">
         <h4>Hubungi Kami</h4>
         <ul>
@@ -272,17 +188,35 @@
     </div>
   </footer>
 
-  <!-- SCRIPT NAVBAR (Sudah disederhanakan karena tidak one-page lagi) -->
   <script>
     const navbar = document.getElementById('main-navbar');
     window.addEventListener('scroll', function() {
-      if (window.scrollY > 30) {
-        navbar.classList.add('scrolled');
-      } else {
-        navbar.classList.remove('scrolled');
-      }
+      if (window.scrollY > 30) { navbar.classList.add('scrolled'); } 
+      else { navbar.classList.remove('scrolled'); }
     });
-  </script>
 
+    // --- SCRIPT SINKRONISASI TEMA ---
+    const themeBtn = document.getElementById('btn-theme-toggle');
+    const themeIcon = themeBtn.querySelector('i');
+    let currentTheme = localStorage.getItem('theme') || 'dark';
+
+    function applyTheme(theme) {
+      if (theme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
+      } else {
+        document.body.removeAttribute('data-theme');
+        themeIcon.classList.replace('fa-sun', 'fa-moon');
+      }
+    }
+    
+    themeBtn.addEventListener('click', () => {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', currentTheme);
+      applyTheme(currentTheme);
+    });
+    
+    applyTheme(currentTheme);
+  </script>
 </body>
 </html>
