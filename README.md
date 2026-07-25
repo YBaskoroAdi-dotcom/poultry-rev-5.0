@@ -68,3 +68,4 @@ Backend + database dapat di-deploy ke **PythonAnywhere** (gratis, MySQL sudah te
 - **Adha Joy Eriyanto** — Frontend dashboard, styling
 - **Yudhistira Baskoro Adi Admojo** — Firmware ESP32, integrasi hardware
 
+"# poultry-rev-5.0" 
