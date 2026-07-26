@@ -31,7 +31,6 @@
   }
 
   *{box-sizing:border-box;}
-  
   html { scroll-behavior: smooth; }
   html,body{margin:0;padding:0; overflow-x: hidden;}
   
@@ -40,7 +39,6 @@
     color:var(--ink-0); font-family:'Inter','Segoe UI',sans-serif; min-height:100vh; padding-top: 110px; 
     transition: background 0.3s ease, color 0.3s ease;
   }
-  
   body[data-theme="dark"] {
     background: radial-gradient(1200px 600px at 80% -10%, #1c2530 0%, transparent 60%), linear-gradient(180deg, var(--bg-0), var(--bg-1));
   }
@@ -110,6 +108,28 @@
   .footer-col ul li i { color: var(--accent); font-size: 1rem; width: 20px; text-align: center; }
   .footer-bottom { text-align: center; padding-top: 30px; }
   .footer-bottom p { margin: 0; color: var(--ink-1); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+
+  /* =======================================================
+     🚀 CSS RESPONSIVE (MONITOR, LAPTOP, & MOBILE/HP)
+  ======================================================= */
+  @media (max-width: 1024px) {
+    .content-section { flex-direction: column !important; padding: 60px 30px !important; text-align: center !important; }
+    .text-block, .image-block { width: 100% !important; flex: none !important; justify-content: center !important; }
+    .text-block .sub { margin-left: auto !important; margin-right: auto !important; }
+    nav.navbar { padding: 20px 30px; flex-wrap: wrap; gap: 15px; justify-content: center;}
+    .nav-menu { width: 100%; justify-content: center; display: flex !important; flex-wrap: wrap; gap: 15px; }
+  }
+  @media (max-width: 768px) {
+    .readout { grid-template-columns: repeat(2, 1fr); }
+    .footer-container { flex-direction: column; text-align: center; }
+    .social-icons { justify-content: center; }
+    .footer-col ul li { justify-content: center; }
+    .text-block h1 { font-size: 2.2rem !important; }
+  }
+  @media (max-width: 480px) {
+    .readout { grid-template-columns: 1fr; }
+    .nav-menu a { font-size: 0.9rem; }
+  }
 </style>
 </head>
 <body>
@@ -195,7 +215,6 @@
       else { navbar.classList.remove('scrolled'); }
     });
 
-    // --- SCRIPT SINKRONISASI TEMA ---
     const themeBtn = document.getElementById('btn-theme-toggle');
     const themeIcon = themeBtn.querySelector('i');
     let currentTheme = localStorage.getItem('theme') || 'dark';

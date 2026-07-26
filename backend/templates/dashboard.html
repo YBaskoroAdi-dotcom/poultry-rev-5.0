@@ -40,12 +40,12 @@
   }
 
   *{box-sizing:border-box;}
-  body{ margin:0; background:var(--bg-0); color:var(--ink-0); font-family:'Inter','Segoe UI',sans-serif; transition: background 0.3s ease, color 0.3s ease; }
+  body{ margin:0; background:var(--bg-0); color:var(--ink-0); font-family:'Inter','Segoe UI',sans-serif; transition: background 0.3s ease, color 0.3s ease; overflow-x: hidden; }
 
   /* --- LAYOUT SIDEBAR & MAIN CONTENT --- */
-  .app-container { display: flex; min-height: 100vh; }
+  .app-container { display: flex; min-height: 100vh; width: 100%; }
   
-  .sidebar { width: 250px; background: var(--card); border-right: 1px solid var(--line); display: flex; flex-direction: column; transition: width 0.3s ease, background 0.3s ease, border-color 0.3s ease; overflow: hidden; position: sticky; top: 0; height: 100vh; z-index: 100; }
+  .sidebar { width: 250px; flex-shrink: 0; background: var(--card); border-right: 1px solid var(--line); display: flex; flex-direction: column; transition: all 0.3s ease; overflow: hidden; position: sticky; top: 0; height: 100vh; z-index: 100; }
   .sidebar.collapsed { width: 72px; }
   .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 20px; height: 72px; border-bottom: 1px solid var(--line); }
   .brand-area { display: flex; align-items: center; gap: 10px; opacity: 1; transition: opacity 0.2s ease, width 0.2s ease; white-space: nowrap; overflow: hidden; }
@@ -63,37 +63,37 @@
   .nav-item span { transition: opacity 0.2s ease; }
   .sidebar.collapsed .nav-item span { opacity: 0; pointer-events: none; }
   
-  .main-content { flex: 1; display: flex; flex-direction: column; width: calc(100% - 72px); }
+  .main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; transition: all 0.3s ease; }
 
   /* --- HEADER DASHBOARD --- */
-  header { display:flex; justify-content:space-between; align-items:center; padding:20px 32px; background:var(--bg-0); position:sticky; top:0; z-index:10; transition: background 0.3s ease; }
+  header { display:flex; justify-content:space-between; align-items:center; padding:20px 40px; background:var(--bg-0); position:sticky; top:0; z-index:10; transition: background 0.3s ease; }
   header h1 { font-size:1.3rem; margin:0; letter-spacing:-0.01em; color: var(--ink-0); transition: color 0.3s ease; }
   
   .btn-theme { background: var(--card); border: 1px solid var(--line); color: var(--ink-0); width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
   .btn-theme:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
 
-  main.dashboard-body { max-width:1100px; margin:0 auto; padding:10px 32px 80px; width: 100%; }
+  main.dashboard-body { width: 100%; max-width: 1400px; margin: 0 auto; padding: 10px 40px 80px; }
 
   /* --- Komponen Utama --- */
   #alert-banner{ display:none; background:var(--danger); color:#fff; font-weight:600; padding:14px 20px; border-radius:12px; margin-bottom:20px; animation:blink 1s infinite; }
   @keyframes blink{ 50%{ opacity:0.55; } }
 
-  .grid-cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:28px; }
-  .card{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; text-align:center; transition: all 0.3s ease; }
-  .card .label{ font-size:0.8rem; color:var(--ink-1); margin-bottom:8px; }
-  .card .value{ font-size:1.8rem; font-weight:700; color: var(--ink-0); }
+  .grid-cards{ display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:20px; margin-bottom:28px; }
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px; text-align:center; transition: all 0.3s ease; }
+  .card .label{ font-size:0.85rem; color:var(--ink-1); margin-bottom:8px; }
+  .card .value{ font-size:2rem; font-weight:700; color: var(--ink-0); }
   .card .value.ok{ color:var(--accent); }
   .card .value.warn{ color:var(--danger); }
 
-  section{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px; margin-bottom:20px; transition: all 0.3s ease; }
-  section h2{ font-size:1rem; margin:0 0 16px; color: var(--ink-0); }
+  section{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:25px; margin-bottom:24px; transition: all 0.3s ease; }
+  section h2{ font-size:1.1rem; margin:0 0 16px; color: var(--ink-0); }
   .muted{ color:var(--ink-1); font-size:0.85rem; margin-top:-8px; margin-bottom:16px;}
 
-  .form-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:16px; }
+  .form-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin-bottom:16px; }
   .field label{ display:block; font-size:0.8rem; color:var(--ink-1); margin-bottom:6px; }
   .field input, .field select{ width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px; font-size:0.95rem; background: var(--bg-0); color: var(--ink-0); transition: all 0.3s ease; }
-  .mode-toggle{ display:flex; gap:8px; margin-bottom:16px; }
-  .mode-toggle button{ flex:1; padding:10px; border-radius:8px; border:1px solid var(--line); background:var(--bg-0); cursor:pointer; font-weight:600; color:var(--ink-1); transition: all 0.3s ease;}
+  .mode-toggle{ display:flex; gap:10px; margin-bottom:16px; }
+  .mode-toggle button{ flex:1; padding:12px; border-radius:8px; border:1px solid var(--line); background:var(--bg-0); cursor:pointer; font-weight:600; color:var(--ink-1); transition: all 0.3s ease;}
   .mode-toggle button.active{ background:var(--accent); color:#000; border-color:var(--accent); }
   .manual-controls{ display:none; gap:12px; margin-bottom:16px; align-items:center; flex-wrap:wrap; }
   .manual-controls.show{ display:flex; }
@@ -106,7 +106,7 @@
   .btn-danger:hover{ background: #dc2626; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
   .btn-toggle-manual{ background:var(--accent-soft); color:var(--accent); border:1px solid rgba(55, 224, 196, 0.4); }
 
-  canvas{ max-height:320px; }
+  canvas{ max-height: 350px; width: 100%; }
   #status-msg{ font-size:0.85rem; margin-top:12px; color:var(--ink-1); }
 
   /* --- LOG TABEL & TABS --- */
@@ -117,7 +117,7 @@
   .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--card); }
   
   .table-responsive { overflow-x: auto; max-height: 400px; }
-  .table-log { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+  .table-log { width: 100%; min-width: 600px; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
   .table-log th { position: sticky; top: 0; background: var(--card); color: var(--ink-1); padding: 14px 16px; font-weight: 600; border-bottom: 1px solid var(--line); z-index: 1; }
   .table-log td { padding: 12px 16px; border-bottom: 1px solid var(--line); color: var(--ink-0); }
   .table-log tr:hover { background: var(--bg-0); }
@@ -126,7 +126,7 @@
   /* --- MODAL POP-UP --- */
   .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
   .modal-overlay.show { opacity: 1; pointer-events: auto; }
-  .modal-content { background: var(--card); width: 100%; max-width: 400px; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.3s ease; border: 1px solid var(--line); }
+  .modal-content { background: var(--card); width: 100%; max-width: 400px; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.3s ease; border: 1px solid var(--line); margin: 15px; }
   .modal-overlay.show .modal-content { transform: translateY(0); }
   .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
   .modal-header h3 { margin: 0; font-size: 1.2rem; color: var(--ink-0); }
@@ -135,16 +135,53 @@
   .modal-body { margin-bottom: 24px; }
   .modal-footer { display: flex; justify-content: flex-end; gap: 12px; }
 
+  /* =======================================================
+     🚀 CSS RESPONSIVE (MEMATIKAN BUG HP & MONITOR)
+  ======================================================= */
+  .mobile-menu-btn { display: none; background: none; border: none; color: var(--ink-0); font-size: 1.5rem; cursor: pointer; padding: 0; }
+  .overlay-bg { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 99; opacity: 0; transition: opacity 0.3s; }
+  
+  @media (min-width: 1200px) {
+    .grid-cards { grid-template-columns: repeat(6, 1fr); gap: 20px; }
+  }
+
+  @media (max-width: 1024px) {
+    .grid-cards { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .sidebar, .sidebar.collapsed { position: fixed !important; left: -300px !important; width: 260px !important; height: 100vh !important; z-index: 9999 !important; transition: left 0.3s ease !important; }
+    .sidebar.mobile-open { left: 0 !important; box-shadow: 10px 0 20px rgba(0,0,0,0.6) !important; }
+    .overlay-bg.show { display: block; opacity: 1; }
+    .main-content { width: 100% !important; margin-left: 0 !important; min-width: 100%; }
+    .mobile-menu-btn { display: block !important; }
+    .desktop-toggle-btn { display: none !important; }
+    header { padding: 15px 20px !important; }
+    header h1 { font-size: 1.2rem !important; }
+    .header-left { display: flex; align-items: center; gap: 15px; }
+    .grid-cards { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+    .card { padding: 15px 10px !important; }
+    .card .label { font-size: 0.75rem !important; }
+    .card .value { font-size: 1.5rem !important; }
+    main.dashboard-body { padding: 15px 20px 80px !important; }
+    section { padding: 18px !important; }
+    .form-row { grid-template-columns: 1fr !important; }
+    .tabs { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .tab-btn { flex: 0 0 auto; padding: 12px 16px; font-size: 0.9rem; }
+    canvas { max-height: 250px !important; }
+  }
 </style>
 </head>
 <body>
 
 <div class="app-container">
   
+  <div class="overlay-bg" id="mobile-overlay" onclick="toggleSidebar()"></div>
+
   <aside class="sidebar collapsed" id="sidebar">
     <div class="sidebar-header">
       <div class="brand-area"><img src="/static/img/Logo.png" alt="Logo SIGMA"><span>SIGMA.IOT</span></div>
-      <button class="btn-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+      <button class="btn-toggle desktop-toggle-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
     </div>
     <nav class="sidebar-nav">
       <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> <span>Beranda</span></a>
@@ -157,9 +194,12 @@
 
   <div class="main-content">
     <header>
-      <div>
-        <h1>Monitoring Status</h1>
-        <p class="muted" style="margin:0;">Diperbarui secara real-time</p>
+      <div class="header-left">
+        <button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+        <div>
+          <h1>Monitoring Status</h1>
+          <p class="muted" style="margin:0;">Diperbarui secara real-time</p>
+        </div>
       </div>
       <button id="btn-theme-toggle" class="btn-theme" title="Ganti Tema Warna">
         <i class="fa-solid fa-moon"></i>
@@ -167,7 +207,6 @@
     </header>
 
     <main class="dashboard-body">
-
       <div id="alert-banner">⚠️ Kondisi kritis terdeteksi — cek suhu / kadar gas!</div>
 
       <div class="grid-cards">
@@ -182,24 +221,24 @@
       <section>
         <h2>📈 Grafik Fluktuasi Suhu & Gas</h2>
         <p class="muted">50 data terakhir, diperbarui otomatis tiap 10 detik.</p>
-        <canvas id="chart-sensor"></canvas>
+        <div style="position: relative; width: 100%; height: 350px;">
+          <canvas id="chart-sensor"></canvas>
+        </div>
       </section>
 
-      <!-- FITUR BARU: TABEL LOG 5 HARI -->
       <section>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 15px; margin-bottom: 16px;">
           <div>
             <h2 style="margin-bottom: 4px;">📑 Log Data Harian</h2>
             <p class="muted" style="margin:0;">Merekam data maksimal 5 hari ke belakang.</p>
           </div>
-          <div style="display: flex; gap: 10px;">
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
             <a class="btn btn-outline" href="/api/export"><i class="fa-solid fa-download"></i> Export CSV</a>
             <button class="btn btn-danger" onclick="openDeleteModal()"><i class="fa-solid fa-trash-can"></i> Hapus Data</button>
           </div>
         </div>
 
         <div class="log-container">
-          <!-- TABS -->
           <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('day1', this)">Hari Ini</button>
             <button class="tab-btn" onclick="switchTab('day2', this)">H-1</button>
@@ -208,7 +247,6 @@
             <button class="tab-btn" onclick="switchTab('day5', this)">H-4</button>
           </div>
           
-          <!-- TABEL -->
           <div class="table-responsive">
             <table class="table-log">
               <thead>
@@ -223,7 +261,6 @@
                 </tr>
               </thead>
               <tbody id="table-body">
-                <!-- Baris data akan diisi oleh JavaScript -->
                 <tr><td colspan="7" style="text-align: center; color: var(--ink-1);">Memuat data...</td></tr>
               </tbody>
             </table>
@@ -292,7 +329,16 @@
 </div>
 
 <script>
-function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
+function toggleSidebar() { 
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('mobile-overlay');
+  if (window.innerWidth <= 768) {
+    sidebar.classList.toggle('mobile-open');
+    overlay.classList.toggle('show');
+  } else {
+    sidebar.classList.toggle('collapsed'); 
+  }
+}
 
 // --- LOGIC TEMA DARK/LIGHT MODE ---
 const themeBtn = document.getElementById('btn-theme-toggle');
@@ -330,6 +376,7 @@ const chart = new Chart(ctx, {
   },
   options: {
     responsive: true,
+    maintainAspectRatio: false,
     scales: {
       x: { grid: { color: '#e4e8ea' }, ticks: { color: '#6b7680' } },
       y: { title: { display: true, text: 'Suhu (°C)', color: '#6b7680' }, grid: { color: '#e4e8ea' }, ticks: { color: '#6b7680' } },
@@ -447,24 +494,18 @@ async function postSettings(payload) {
   } catch (e) { msg.innerText = '❌ Tidak bisa terhubung ke server.'; }
 }
 
-// --- LOGIC TABEL & MODAL HAPUS DATA ---
 let currentTab = 'day1';
 
 function switchTab(dayId, btnElement) {
   currentTab = dayId;
-  // Update UI Tabs
   document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
   btnElement.classList.add('active');
-  
-  // Sekarang udah nembak ke route backend lu yang beneran!
   fetchLogTableData(dayId);
 }
 
-// Fungsi untuk ngisi tabel sesuai hari dari Flask API
 async function fetchLogTableData(dayId) {
   const tbody = document.getElementById('table-body');
   tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Memuat data...</td></tr>';
-  
   try {
     const res = await fetch(`/api/logs_harian?day=${dayId}`); 
     if (!res.ok) return;
@@ -475,19 +516,9 @@ async function fetchLogTableData(dayId) {
        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Tidak ada data untuk hari ini.</td></tr>';
        return;
     }
-
     rows.forEach(r => {
-      // Bikin baris tabel untuk setiap data
       const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${r.waktu}</td>
-        <td>${r.suhu}</td>
-        <td>${r.kelembapan || '--'}</td>
-        <td>${r.gas}</td>
-        <td>${r.jarak || '--'}</td>
-        <td>${r.status_kipas || '--'}</td>
-        <td>${r.status_servo || '--'}</td>
-      `;
+      tr.innerHTML = `<td>${r.waktu}</td><td>${r.suhu}</td><td>${r.kelembapan || '--'}</td><td>${r.gas}</td><td>${r.jarak || '--'}</td><td>${r.status_kipas || '--'}</td><td>${r.status_servo || '--'}</td>`;
       tbody.appendChild(tr);
     });
   } catch (e) { 
@@ -495,25 +526,16 @@ async function fetchLogTableData(dayId) {
   }
 }
 
-// Logic Pop-up Modal Delete
 const deleteModal = document.getElementById('deleteModal');
 const deleteOption = document.getElementById('modal-delete-option');
 const dateWrapper = document.getElementById('specific-date-wrapper');
 
-function openDeleteModal() {
-  deleteModal.classList.add('show');
-}
-
-function closeDeleteModal() {
-  deleteModal.classList.remove('show');
-}
+function openDeleteModal() { deleteModal.classList.add('show'); }
+function closeDeleteModal() { deleteModal.classList.remove('show'); }
 
 deleteOption.addEventListener('change', function() {
-  if (this.value === 'specific_date') {
-    dateWrapper.style.display = 'block';
-  } else {
-    dateWrapper.style.display = 'none';
-  }
+  if (this.value === 'specific_date') { dateWrapper.style.display = 'block'; } 
+  else { dateWrapper.style.display = 'none'; }
 });
 
 async function confirmDelete() {
@@ -521,17 +543,14 @@ async function confirmDelete() {
   let apiUrl = '/api/logs?action=';
 
   if (option === 'older_than_5') {
-    // Bikin format tanggal 5 hari yang lalu buat dikirim ke backend
     let d = new Date();
     d.setDate(d.getDate() - 5);
     let beforeDate = d.toISOString().split('T')[0];
     apiUrl = '/api/logs?before=' + beforeDate;
-    
   } else if (option === 'specific_date') {
     const before = document.getElementById('modal-delete-date').value;
     if (!before) { alert('Pilih tanggal batas dulu bro.'); return; }
     apiUrl = '/api/logs?before=' + before;
-    
   } else if (option === 'all') {
     apiUrl = '/api/logs?all=true'; 
   }
@@ -542,17 +561,16 @@ async function confirmDelete() {
     alert('Berhasil menghapus ' + d.deleted_rows + ' baris data.');
     closeDeleteModal();
     refreshHistory();
-    fetchLogTableData(currentTab); // refresh tabel
+    fetchLogTableData(currentTab);
   } catch (e) { 
     alert('Gagal menghapus data.'); 
   }
 }
 
-// Inisialisasi
 loadSettings();
 refreshLatest();
 refreshHistory();
-fetchLogTableData('day1'); // Load tabel hari ini pertama kali
+fetchLogTableData('day1');
 setInterval(refreshLatest, 3000);
 setInterval(refreshHistory, 10000);
 </script>
