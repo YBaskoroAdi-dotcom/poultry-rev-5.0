@@ -105,7 +105,9 @@ def get_latest():
                 return jsonify({"message": "Belum ada data"}), 404
 
             if "waktu" in row and row["waktu"]:
-                row["waktu"] = row["waktu"].strftime("%Y-%m-%d %H:%M:%S")
+                # TAMBAHKAN +7 JAM UNTUK WIB
+                waktu_wib = row["waktu"] + timedelta(hours=7)
+                row["waktu"] = waktu_wib.strftime("%Y-%m-%d %H:%M:%S")
             return jsonify(row)
         finally:
             db.close()
@@ -128,7 +130,9 @@ def get_history():
             rows.reverse()
             for r in rows:
                 if "waktu" in r and r["waktu"]:
-                    r["waktu"] = r["waktu"].strftime("%Y-%m-%d %H:%M:%S")
+                    # TAMBAHKAN +7 JAM UNTUK WIB
+                    waktu_wib = r["waktu"] + timedelta(hours=7)
+                    r["waktu"] = waktu_wib.strftime("%Y-%m-%d %H:%M:%S")
 
             return jsonify(rows)
         finally:
@@ -153,14 +157,16 @@ def get_logs_harian():
         try:
             with db.cursor(pymysql.cursors.DictCursor) as cur:
                 cur.execute(
-                    "SELECT * FROM sensor_logs WHERE DATE(waktu) = %s ORDER BY waktu DESC",
+                    "SELECT * FROM sensor_logs WHERE DATE(DATE_ADD(waktu, INTERVAL 7 HOUR)) = %s ORDER BY waktu DESC",
                     (target_date,)
                 )
                 rows = cur.fetchall()
 
             for r in rows:
                 if "waktu" in r and r["waktu"]:
-                    r["waktu"] = r["waktu"].strftime("%Y-%m-%d %H:%M:%S")
+                    # TAMBAHKAN +7 JAM UNTUK WIB
+                    waktu_wib = r["waktu"] + timedelta(hours=7)
+                    r["waktu"] = waktu_wib.strftime("%Y-%m-%d %H:%M:%S")
 
             return jsonify(rows)
         finally:
