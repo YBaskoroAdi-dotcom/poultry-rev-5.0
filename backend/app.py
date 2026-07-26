@@ -77,14 +77,10 @@ def log_data():
                     ),
                 )
                 
-                # Batasi maksimal 20 data terbaru
+                # Otomatis hapus data yang umurnya sudah lebih dari 5 hari
                 cur.execute("""
                     DELETE FROM sensor_logs 
-                    WHERE id NOT IN (
-                        SELECT id FROM (
-                            SELECT id FROM sensor_logs ORDER BY id DESC LIMIT 20
-                        ) AS subquery
-                    )
+                    WHERE waktu < NOW() - INTERVAL 5 DAY
                 """)
                 new_id = cur.lastrowid
             return jsonify({"status": "ok", "id": new_id}), 201
