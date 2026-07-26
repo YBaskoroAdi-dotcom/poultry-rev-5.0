@@ -90,6 +90,11 @@
   @media (max-width: 768px) {
     .sidebar, .sidebar.collapsed { position: fixed !important; left: -300px !important; width: 260px !important; height: 100vh !important; z-index: 9999 !important; transition: left 0.3s ease !important; }
     .sidebar.mobile-open { left: 0 !important; box-shadow: 10px 0 20px rgba(0,0,0,0.6) !important; }
+    
+    /* FIX LOGO & TEKS HILANG DI HP */
+    .sidebar.collapsed .brand-area { opacity: 1 !important; width: auto !important; pointer-events: auto !important; }
+    .sidebar.collapsed .nav-item span { opacity: 1 !important; pointer-events: auto !important; }
+
     .overlay-bg.show { display: block; opacity: 1; }
     .main-content { width: 100% !important; margin-left: 0 !important; min-width: 100%; }
     .mobile-menu-btn { display: block !important; }
